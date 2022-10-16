@@ -1,12 +1,14 @@
 # WAXS crystallinity calculator
 
 ## Description
-This python script can be used to plot the fitted WAXS data output from TOPAS academic and determine the cellulose crystallinity using the Ruland method.
+This python script can be used to plot the fitted WAXS data output from TOPAS academic and determine the cellulose crystallinity using the Ruland method. 
 
 ## Installation
 Requires python 3, matplotlib, scipy and numpy. In windows, installation of Anaconda python 3 distribution will cover all dependencies
 
 ## Usage
+This requires a .txt file saved from TOPAS (academic) as input.
+
 To plot the output from one fitting:
 ```python
 python WAXS_ta_v4.py --xye --svg <filename without extension>
