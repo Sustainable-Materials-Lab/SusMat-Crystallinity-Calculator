@@ -3,12 +3,11 @@
 """
 Created on Sat Feb 28 2015 at 14:30:22
 
-Python script for the generation of XRD graphs from Highscore Plus output and
+Python script for the generation of XRD graphs from TOPAS output and
 generation of crystallinity data
 """
 import matplotlib as mpl
 mpl.rcParams['font.family'] = 'sans-serif'
-#mpl.rcParams['mathtext.fontset'] = 'stixsans'
 import numpy as np
 import scipy.integrate as intg
 import matplotlib.pyplot as plt
@@ -18,9 +17,9 @@ import copy
 
 parser = ap.ArgumentParser(description='Plot XRD from topas academic')
 parser.add_argument("input", help="Filename of text file excl. ext")
-#parser.add_argument("product", help="Filename of product spectrum CSV")
 parser.add_argument("--mono", help="Monochromated copper Kalpha used", action="store_true")
-parser.add_argument("--png", help="png output", action="store_true")
+parser.add_argument("--png", help="png output (do not combine with svg)", action="store_true")
+parser.add_argument("--svg", help="svg output (do not combine with png)", action="store_true")
 parser.add_argument("--onecol", help="single column output", action="store_true")
 parser.add_argument("--clip", help="Clip 2theta range to xmin-xmax", action="store_true")
 parser.add_argument("--celtype",help="type of cellulose(use latex math notation)", default=r"Cellulose I$_\beta$")
@@ -30,10 +29,7 @@ parser.add_argument("--xmax", help="Max 2theta used for clipping",type=float,def
 parser.add_argument("--xmin", help="Min 2theta used for clipping",type=float,default=5)
 parser.add_argument("--legloc", help="legend location eg. upper left", type=str, default="upper left")
 parser.add_argument("--exposure", help="convert CPS input to counts (exp in seconds)", type=float, default=1)
-#parser.add_argument("--cel2amorph", help="amorphous from cellulose II profile", action="store_true")
 parser.add_argument("--cel2", help="cellulose II phase present",action="store_true")
-#parser.add_argument("--iPP", help="alpha iPP phase present",action="store_true")
-#parser.add_argument("--PCL", help="PCL phase present",action="store_true")
 parser.add_argument("--linsub",help="Subtract linear portion of amorphous scattering",action="store_true")
 parser.add_argument("--xye",help="input file had errors included",action="store_true")
 parser.add_argument("--keepbkg",help="Do not subtract the background",action="store_true")
@@ -44,16 +40,6 @@ parser.add_argument("--theta", help="plot in 2theta", action="store_true")
 parser.add_argument("--absolute", help="use absolute intensity", action="store_true")
 parser.add_argument("--rawcryst", help="use raw data for crystallinity (rather than profile), use total cellulose for cryst. phase", action="store_true")
 parser.add_argument("--FOLorentz", help="No Lorentz correction", action="store_true")
-#parser.add_argument("--background", help="background in data file (not amorphous)", action="store_true")
-#parser.add_argument("--nobck", help="no background curve in data", action="store_true")
-#parser.add_argument("--dpi", help="Set DPI (PNG only)",type=int, default=300)
-#parser.add_argument("--trans", help="Transmittance input (no effect on output)", action="store_true")
-#parser.add_argument("--totrans", help="Convert absorbance to Transmittance", action="store_true")
-#parser.add_argument("--size",type=float,help="enter image width in cm (30 cm default)", default=30)
-#parser.add_argument("--name", help="Sample name", default="Sample")
-#parser.add_argument("--yoff", help="Y-offset of sample spectrum", type=float, default=0.3)
-
-#parser.add_argument("output", help="output file")
 
 args = parser.parse_args() #map arguments to args
 
@@ -93,11 +79,14 @@ else:
 #Ask for filetype
 if args.png == True:
     filetp = 'png'
+elif args.svg == True:
+    filetp = 'svg'
 else:
     filetp = 'pdf'
 
 dpipng = 600
-    
+
+"""Detect the presence of extra phases"""
 with open(rawfile) as f:
     rawtxt = f.readlines()
 
@@ -497,12 +486,10 @@ else:
             else:
                 ttheta,raw,prf,diff,cel1,amorph = data 
                                                                 
-        
 raw *= args.exposure
 prf *= args.exposure
 diff *= args.exposure
 cel1 *= args.exposure
-#bck *= args.exposure
 amorph *= args.exposure
 if args.cel2 == True:
     cel2 *= args.exposure
@@ -512,8 +499,6 @@ if args.giPP == True:
     gipp *= args.exposure
 if args.PCL == True:
     PCL *= args.exposure
-
-
 
 if args.clip == True:
     startval = np.where(ttheta>args.xmin)[0][0]
@@ -533,23 +518,6 @@ if args.clip == True:
         gipp = gipp[startval:endval]
     if args.PCL == True:
         PCL = PCL[startval:endval]
-
-"""bckmin = min(bck)
-
-if bckmin < 0:
-    bck = bck-bckmin
-    prf = prf-bckmin
-    raw = raw-bckmin
-    cel1=cel1-bckmin
-    amorph -= bckmin
-    if args.cel2 == True:
-        cel2 -= bckmin
-    if args.iPP == True:
-        iPP -= bckmin
-    if args.giPP == True:
-        gipp -= bckmin
-    if args.PCL == True:
-        PCL -= bckmin    """
         
 if args.linsub == True:#Remove the linear portion of the "amorphous" diffraction and add to the background
     minamorph = min(amorph)
@@ -581,34 +549,6 @@ if args.linsub == True:#Remove the linear portion of the "amorphous" diffraction
 #remove background from cel1 and amorph
 #For plotting add background first
 
-"""cel1 += bck
-cel12 = cel1 - bck
-amorph += bck
-amorph2 = amorph - bck"""
-
-"""if args.cel2 == True:
-    cel2 += bck
-    cel22 = cel2 - bck
-if args.iPP == True:
-    iPP += bck
-    iPP2 = iPP - bck
-if args.giPP == True:
-    gipp += bck
-    gipp2 = gipp - bck
-if args.PCL == True:
-    PCL += bck
-    PCL2 = PCL - bck"""
-"""if args.cel2 == True:
-    tot = cel1 + amorph + cel2    
-if args.iPP == True:
-    if args.giPP == True:
-        tot = cel1 + iPP + gipp + amorph
-    else:
-        tot = cel1 + iPP + amorph
-if args.PCL == True:
-    tot = cel1 + PCL + amorph
-if (args.cel2 == False and args.iPP == False and args.PCL == False):
-    tot = amorph + cel1"""
 if args.keepbkg == True:
     raw += bck
     cel1 += bck
@@ -664,8 +604,6 @@ else:
        icryst = intg.trapz((cryst*(s**2)),s)
        icryst1 = intg.cumtrapz((cryst*(s**2)),s,initial=0)
     else:
-       #icryst = itot2-iamorph2
-       #icryst1 = itot1 - iamorph1
        icryst = intg.trapz(((tot-amorph)*(s**2)),s)
        icryst1 = intg.cumtrapz(((tot-amorph)*(s**2)),s,initial=0)
 chi_c = icryst/itot2 #Crystallinity index
@@ -686,11 +624,7 @@ if args.PCL == True:
     fPCL = iPCL2/icryst
 """Plot"""
 #create figure and axes
-fig = plt.figure()
-#split page into a 1x1 array of subplots and put me in the first one (111)
-#Raw Data
-ax = fig.add_subplot(111)
- # first subplot
+fig,ax = plt.subplots()
 
 #Cellulose 1
 if args.theta ==True:
