@@ -62,7 +62,7 @@ width = 17.78
 
 if args.onecol == True:
     width = width/2
-winch = width/2.54 #pyplot is 'merican so uses inches
+winch = width/2.54 #pyplot is american so uses inches
 
 hinch = winch/1.75 #ISO aspect ratio
 
@@ -624,7 +624,7 @@ if args.PCL == True:
     fPCL = iPCL2/icryst
 """Plot"""
 #create figure and axes
-fig,ax = plt.subplots()
+fig,ax = plt.subplots(figsize=(hinch,winch),layout='constrained')
 
 #Cellulose 1
 if args.theta ==True:
@@ -769,7 +769,7 @@ if args.iPP == True:
                 "Crystalline Integral: {}".format(iamorphstr),"$\chi_c=$ {}".format(chicstr)],\
                 loc=args.legloc,frameon=False, prop={'size':legsize})
     else:
-        plt.legend([ax1,ax11,ax11a,ax12,ax2,ax3,ax4,ax5,dummy],\
+        plt.legend([ax1,ax11,ax11a,ax12,ax2,ax4,ax5,dummy],\
                 ["Raw Data",r"Cellulose I$\beta$: {}".format(cel1str)+'%',r"$\alpha$-iPP: {}".format(iPPstr)+'%',"Amorphous","Fitted Profile","Profile Integral: {}".format(itotstr),\
                 "Crystalline Integral: {}".format(iamorphstr),"$\chi_c=$ {}".format(chicstr)],\
                 loc=args.legloc,frameon=False, prop={'size':legsize})
@@ -785,8 +785,6 @@ if (args.cel2 == False and args.iPP == False and args.PCL == False):
                 loc=args.legloc,frameon=False, prop={'size':legsize}) 
 
 
-plt.gcf().set_size_inches([winch,hinch]) # A4 = 11.7,8.3 and single col = 3.25,1.5
-
 #Decide output
 if filetp in ('png','PNG'):
     plt.savefig(fname + '.' + filetp, bbox_inches='tight', dpi=dpipng)
@@ -797,12 +795,8 @@ if args.raw == True:
     if args.theta == True:
         """Plot"""
         #create figure and axes
-        fig = plt.figure()
-        #split page into a 1x1 array of subplots and put me in the first one (111)
-        #Raw Data
-        ax = fig.add_subplot(111)
-         # first subplot
-        
+        fig,ax = plt.subplots(figsize=(hinch,winch),layout='constrained')
+
         #Cellulose 1
     
         ax1 = ax.plot(ttheta,raw,linewidth=0.5,color='k')
@@ -838,12 +832,7 @@ if args.raw == True:
     else: 
         """Plot"""
         #create figure and axes
-        fig = plt.figure()
-        #split page into a 1x1 array of subplots and put me in the first one (111)
-        #Raw Data
-        ax = fig.add_subplot(111)
-         # first subplot
-        
+        fig,ax = plt.subplots(figsize=(hinch,winch),layout='constrained')
         #Cellulose 1
     
         ax1 = ax.plot(s,raw,linewidth=0.5,color='k')
@@ -867,8 +856,6 @@ if args.raw == True:
         ax.set_xlabel(r'$q=4\pi\sin\theta/\lambda$ /nm$^{-1}$',size=labsize) #Can use LaTeX in labels
         
         #Legend
-        
-        plt.gcf().set_size_inches([winch,hinch]) # A4 = 11.7,8.3 and single col = 3.25,1.5
         
         #Decide output
         if filetp in ('png','PNG'):
