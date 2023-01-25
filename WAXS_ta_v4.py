@@ -567,7 +567,7 @@ tot=prf
 
 if args.rawcryst == True:
     tot = raw
-    cryst = tot - amorph
+    cryst = prf - amorph
 """Calculate s"""
  #Copper Kalpha1 1.54056 Angstroms Kalpha=1.5418 see input black above
 lambda2 = (lambda1/10) #in nm
