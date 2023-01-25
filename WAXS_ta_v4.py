@@ -624,7 +624,7 @@ if args.PCL == True:
     fPCL = iPCL2/icryst
 """Plot"""
 #create figure and axes
-fig,ax = plt.subplots(figsize=(hinch,winch),layout='constrained')
+fig,ax = plt.subplots(figsize=(winch,hinch),layout='constrained')
 
 #Cellulose 1
 if args.theta ==True:
