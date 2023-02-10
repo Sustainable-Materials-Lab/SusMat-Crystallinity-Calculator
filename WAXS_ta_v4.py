@@ -49,7 +49,7 @@ filename=fname
 
 """Get filenames and other data from user input"""
 
-rawfile = filename+'.txt'
+rawfile = filename
 data=np.genfromtxt(rawfile,delimiter=',', skip_header=2,invalid_raise=False, unpack=False)
 
 if args.mono == True:
@@ -787,9 +787,9 @@ if (args.cel2 == False and args.iPP == False and args.PCL == False):
 
 #Decide output
 if filetp in ('png','PNG'):
-    plt.savefig(fname + '.' + filetp, bbox_inches='tight', dpi=dpipng)
+    plt.savefig(fname[:-4] + '.' + filetp, bbox_inches='tight', dpi=dpipng)
 else:
-    plt.savefig(fname + '.' + filetp, bbox_inches='tight')
+    plt.savefig(fname[:-4] + '.' + filetp, bbox_inches='tight')
 
 if args.raw == True:
     if args.theta == True:
@@ -826,9 +826,9 @@ if args.raw == True:
         
         #Decide output
         if filetp in ('png','PNG'):
-            plt.savefig(fname + "_raw" + '.' + filetp, bbox_inches='tight', dpi=dpipng)
+            plt.savefig(fname[:-4] + "_raw" + '.' + filetp, bbox_inches='tight', dpi=dpipng)
         else:
-            plt.savefig(fname + "_raw" + '.' + filetp, bbox_inches='tight')
+            plt.savefig(fname[:-4] + "_raw" + '.' + filetp, bbox_inches='tight')
     else: 
         """Plot"""
         #create figure and axes
@@ -859,6 +859,6 @@ if args.raw == True:
         
         #Decide output
         if filetp in ('png','PNG'):
-            plt.savefig(fname + "_raw" + '.' + filetp, bbox_inches='tight', dpi=dpipng)
+            plt.savefig(fname[:-4] + "_raw" + '.' + filetp, bbox_inches='tight', dpi=dpipng)
         else:
-            plt.savefig(fname + "_raw" + '.' + filetp, bbox_inches='tight')
+            plt.savefig(fname[:-4] + "_raw" + '.' + filetp, bbox_inches='tight')
