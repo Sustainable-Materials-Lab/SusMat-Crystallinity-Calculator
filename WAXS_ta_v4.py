@@ -227,9 +227,9 @@ elif args.background == True:
                     ttheta,raw,bck,prf,diff,cel1 = data 
                                                                     
         
-                    cel1 -= bck
-                    amorph=copy.copy(bck)
-                    bck *= 0
+        cel1 -= bck
+        amorph=copy.copy(bck)
+        bck *= 0
     else:
         if args.xye == True:
                 if args.cel2 == True:
