@@ -26,8 +26,12 @@ parser.add_argument("--empty", help="empty file (.edf)")
 parser.add_argument("--background", help="background file (.edf)")
 parser.add_argument("--opencl", help="Use OpenCL (requires pyopencl)",action="store_true")
 parser.add_argument("--bkg_factor", help="background correction factor",type=float,default=float(1))
+parser.add_argument("--eta", help="number of data points in eta",type=int,default=360)
+parser.add_argument("--theta", help="number of data points in 2theta",type=int,default=2500)
 parser.add_argument("--noabs", help="No absorption correction",action="store_true")
 parser.add_argument("--autobkg", help="Automatic background scaling",action="store_true")
+parser.add_argument("--do1D", help="output 1D",action="store_true")
+parser.add_argument("--scale", help="Scale factor (used to help with fitting 1D)",type=float,default=float(1))
 args = parser.parse_args()
 
 
@@ -112,20 +116,34 @@ else:
             print("Incorrect background, ignoring")
             data_2I = data_2D
 
-data_2I2 = poni.integrate2d(data_2I,3000,3600,unit="2th_deg")
+if args.do1D == True:
+    data_1D = poni.integrate1d(file.data,
+                               1000, correctSolidAngle=True,
+                                      method=intmeth, radial_range=(None), azimuth_range=(None),
+                                      unit="2th_deg", mask=mask.data, normalization_factor=norm_sample,
+                                      metadata=None,error_model="poisson")
+    q2,I2,sig2 = data_1D
+    eta2 = 0
+else:
+    data_2I2 = poni.integrate2d(data_2I,args.theta,args.eta,mask=mask.data,unit="2th_deg")
+    
+    I2,q2,eta2 = data_2I2
 
-I2,q2,chi2 = data_2I2
-
-if np.min(I2) < 0:
-    I2 -= np.min(I2)
+if np.min(I2) <= 0:
+    I2 -= np.min(I2)-1e-9
 
 """Polarization correction according to doi:10.1107/S0021889813014805"""
 polfact = 0.5*(1+((np.cos(np.radians(q2)))**2))
 
 I22 = np.multiply(I2,polfact)
+I22 *= args.scale
 
 output_head = np.insert(q2,0,float(file.header['WaveLength']))
-output_matrix = np.insert(I22,0,chi2,axis=1)
-output_matrix = np.insert(output_matrix,0,output_head,axis=0)
+if args.do1D == True:
+    output_matrix = np.insert(I22,0,eta2)
+    output_matrix = np.vstack((output_head,output_matrix))
+else:
+    output_matrix = np.insert(I22,0,eta2,axis=1)
+    output_matrix = np.insert(output_matrix,0,output_head,axis=0)
 
 np.savetxt(args.sample[:-3]+"csv", output_matrix,delimiter=',')
