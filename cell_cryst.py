@@ -575,52 +575,52 @@ lambda2 = (lambda1/10) #in nm
 s = ((4*np.pi*np.sin((ttheta/2)*(np.pi/180)))/lambda2) #is Q
 """Integrate"""
 if args.FOLorentz == True:
-    iraw1 = intg.cumtrapz((raw),s,initial=0) #Integral curve
-    iraw2 = intg.trapz((raw),s) #Integral value
-    icel12 = intg.trapz(cel1,s)
-    iamorph1 = intg.cumtrapz((amorph),s,initial=0) #Integral curve
-    iamorph2 = intg.trapz((amorph),s) #Integral value
-    iprf1 = intg.cumtrapz((prf),s,initial=0) #Integral curve
-    iprf2 = intg.trapz((prf),s) #Integral value
-    itot1 = intg.cumtrapz((tot),s,initial=0) #Integral curve
-    itot2 = intg.trapz((tot),s) #Integral value
+    iraw1 = intg.cumulative_trapezoid((raw),s,initial=0) #Integral curve
+    iraw2 = intg.trapezoid((raw),s) #Integral value
+    icel12 = intg.trapezoid(cel1,s)
+    iamorph1 = intg.cumulative_trapezoid((amorph),s,initial=0) #Integral curve
+    iamorph2 = intg.trapezoid((amorph),s) #Integral value
+    iprf1 = intg.cumulative_trapezoid((prf),s,initial=0) #Integral curve
+    iprf2 = intg.trapezoid((prf),s) #Integral value
+    itot1 = intg.cumulative_trapezoid((tot),s,initial=0) #Integral curve
+    itot2 = intg.trapezoid((tot),s) #Integral value
     if args.rawcryst == True:
-       icryst = intg.trapz((cryst),s)
-       icryst1 = intg.cumtrapz((cryst),s,initial=0)
+       icryst = intg.trapezoid((cryst),s)
+       icryst1 = intg.cumulative_trapezoid((cryst),s,initial=0)
     else:
        icryst = itot2-iamorph2
        icryst1 = itot1 - iamorph1
 else:
-    iraw1 = intg.cumtrapz((raw*(s**2)),s,initial=0) #Integral curve
-    iraw2 = intg.trapz((raw*(s**2)),s) #Integral value
-    icel12 = intg.trapz(cel1*(s**2),s)
-    iamorph1 = intg.cumtrapz((amorph*(s**2)),s,initial=0) #Integral curve
-    iamorph2 = intg.trapz((amorph*(s**2)),s) #Integral value
-    iprf1 = intg.cumtrapz((prf*(s**2)),s,initial=0) #Integral curve
-    iprf2 = intg.trapz((prf*(s**2)),s) #Integral value
-    itot1 = intg.cumtrapz((tot*(s**2)),s,initial=0) #Integral curve
-    itot2 = intg.trapz((tot*(s**2)),s) #Integral value
+    iraw1 = intg.cumulative_trapezoid((raw*(s**2)),s,initial=0) #Integral curve
+    iraw2 = intg.trapezoid((raw*(s**2)),s) #Integral value
+    icel12 = intg.trapezoid(cel1*(s**2),s)
+    iamorph1 = intg.cumulative_trapezoid((amorph*(s**2)),s,initial=0) #Integral curve
+    iamorph2 = intg.trapezoid((amorph*(s**2)),s) #Integral value
+    iprf1 = intg.cumulative_trapezoid((prf*(s**2)),s,initial=0) #Integral curve
+    iprf2 = intg.trapezoid((prf*(s**2)),s) #Integral value
+    itot1 = intg.cumulative_trapezoid((tot*(s**2)),s,initial=0) #Integral curve
+    itot2 = intg.trapezoid((tot*(s**2)),s) #Integral value
     if args.rawcryst == True:
-       icryst = intg.trapz((cryst*(s**2)),s)
-       icryst1 = intg.cumtrapz((cryst*(s**2)),s,initial=0)
+       icryst = intg.trapezoid((cryst*(s**2)),s)
+       icryst1 = intg.cumulative_trapezoid((cryst*(s**2)),s,initial=0)
     else:
-       icryst = intg.trapz(((tot-amorph)*(s**2)),s)
-       icryst1 = intg.cumtrapz(((tot-amorph)*(s**2)),s,initial=0)
+       icryst = intg.trapezoid(((tot-amorph)*(s**2)),s)
+       icryst1 = intg.cumulative_trapezoid(((tot-amorph)*(s**2)),s,initial=0)
 chi_c = icryst/itot2 #Crystallinity index
 
 fcel1 = icel12/icryst
 
 if args.cel2 == True:
-    icel22 = intg.trapz(cel2*(s**2),s)
+    icel22 = intg.trapezoid(cel2*(s**2),s)
     fcel2 = icel22/icryst
 if args.iPP == True:
-    iiPP2 = intg.trapz(iPP*(s**2),s)
+    iiPP2 = intg.trapezoid(iPP*(s**2),s)
     fiPP = iiPP2/icryst
 if args.giPP == True:
-    igipp2 = intg.trapz(gipp*(s**2),s)
+    igipp2 = intg.trapezoid(gipp*(s**2),s)
     fgipp = igipp2/icryst
 if args.PCL == True:
-    iPCL2 = intg.trapz(PCL*(s**2),s)
+    iPCL2 = intg.trapezoid(PCL*(s**2),s)
     fPCL = iPCL2/icryst
 """Plot"""
 #create figure and axes
@@ -756,32 +756,37 @@ if args.giPP == True:
 if args.PCL == True:
     PCLstr = str(round(float(100*fPCL),2))
 
+alpha = "\u03B1"
+beta = "\u03B2"
+gamma = "\u03B3"
+chi = "\u03C7"
+
 
 if args.cel2 == True:
     plt.legend([ax1,ax11,ax11a,ax12,ax2,ax4,ax5,dummy],\
-            ["Raw Data",args.celtype+": {}".format(cel1str)+'%',args.cel2type+": {}".format(cel2str)+'%',"Amorphous","Fitted Profile","Profile Integral: {}".format(itotstr),\
-            "Crystalline Integral: {}".format(iamorphstr),"$\chi_c=$ {}".format(chicstr)],\
+            ["Raw Data",f"{args.celtype}: {cel1str}%",f"{args.cel2type}: {cel2str}%","Amorphous","Fitted Profile",f"Profile Integral: {itotstr}",\
+            f"Crystalline Integral: {iamorphstr}",f"{chi}$_c$ = {chicstr}"],\
             loc=args.legloc,frameon=False, prop={'size':legsize})
 if args.iPP == True:
     if args.giPP == True:
         plt.legend([ax1,ax11,ax11a,ax12a,ax12,ax2,ax4,ax5,dummy],\
-                ["Raw Data",r"Cellulose I$\beta$: {}".format(cel1str)+'%',r"$\alpha$-iPP: {}".format(iPPstr)+'%',r"$\gamma$-iPP: {}".format(gippstr)+'%',"Amorphous","Fitted Profile","Profile Integral: {}".format(itotstr),\
-                "Crystalline Integral: {}".format(iamorphstr),"$\chi_c=$ {}".format(chicstr)],\
+                ["Raw Data",f"Cellulose I{beta}: {cel1str}%",f"{alpha}-iPP: {iPPstr}%",f"{gamma}-iPP: {gippstr}%","Amorphous","Fitted Profile",f"Profile Integral: {itotstr}",\
+            f"Crystalline Integral: {iamorphstr}",f"{chi}$_c$ = {chicstr}"],\
                 loc=args.legloc,frameon=False, prop={'size':legsize})
     else:
         plt.legend([ax1,ax11,ax11a,ax12,ax2,ax4,ax5,dummy],\
-                ["Raw Data",r"Cellulose I$\beta$: {}".format(cel1str)+'%',r"$\alpha$-iPP: {}".format(iPPstr)+'%',"Amorphous","Fitted Profile","Profile Integral: {}".format(itotstr),\
-                "Crystalline Integral: {}".format(iamorphstr),"$\chi_c=$ {}".format(chicstr)],\
+                ["Raw Data",f"Cellulose I{beta}: {cel1str}%",f"{alpha}-iPP: {iPPstr}%","Amorphous","Fitted Profile",f"Profile Integral: {itotstr}",\
+            f"Crystalline Integral: {iamorphstr}",f"{chi}$_c$ = {chicstr}"],\
                 loc=args.legloc,frameon=False, prop={'size':legsize})
 if args.PCL == True:
     plt.legend([ax1,ax11,ax11a,ax12,ax2,ax4,ax5,dummy],\
-            ["Raw Data",r"Cellulose I$\beta$: {}".format(cel1str)+'%',"PCL: {}".format(PCLstr)+'%',"Amorphous","Fitted Profile","Profile Integral: {}".format(itotstr),\
-            "Crystalline Integral: {}".format(iamorphstr),"$\chi_c=$ {}".format(chicstr)],\
+            ["Raw Data",f"Cellulose I{beta}: {cel1str}%",f"PCL: {PCLstr}%","Amorphous","Fitted Profile",f"Profile Integral: {itotstr}",\
+            f"Crystalline Integral: {iamorphstr}",f"{chi}$_c$ = {chicstr}"],\
             loc=args.legloc,frameon=False, prop={'size':legsize})
 if (args.cel2 == False and args.iPP == False and args.PCL == False):
     plt.legend([ax1,ax11,ax12,ax2,ax4,ax5,dummy],\
-                ["Raw Data",args.celtype,"Amorphous","Fitted Profile","Profile Integral: {}".format(itotstr),\
-                "Crystalline Integral: {}".format(iamorphstr),"$\chi_c=$ {}".format(chicstr)],\
+                ["Raw Data",args.celtype,"Amorphous","Fitted Profile",f"Profile Integral: {itotstr}",\
+            f"Crystalline Integral: {iamorphstr}",f"{chi}$_c$ = {chicstr}"],\
                 loc=args.legloc,frameon=False, prop={'size':legsize}) 
 
 

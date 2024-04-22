@@ -11,13 +11,13 @@ This requires a .txt file saved from TOPAS (academic) as input.
 
 To plot the output from one fitting:
 ```python
-python WAXS_ta_v4.py --xye --svg <filename without extension>
+python cell_cryst.py --xye --svg <filename without extension>
 ```
 
 To plot the output from a folder full of files using powershell:
 
 ```powershell
-Get-ChildItem -Filter *.txt | ForEach-Object -Process {python WAXS_ta_v4.py --xye --svg $_.BaseName}
+Get-ChildItem -Filter *.txt | ForEach-Object -Process {python cell_cryst.py --xye --svg $_.BaseName}
 ```
 
 ## Support
