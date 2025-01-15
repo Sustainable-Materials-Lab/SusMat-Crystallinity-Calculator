@@ -27,7 +27,7 @@ mpl.rcParams['font.family'] = 'sans-serif'
 def cli():
     """Calculate the crystallinity of the cellulose sample and plot the data"""
     parser = ap.ArgumentParser(description='Plot XRD from topas academic')
-    parser.add_argument("input", help="Filename of text file excl. ext")
+    parser.add_argument("input", help="Path to iRODS collection containing TOPAS txt files")
     parser.add_argument(
         "--mono", help="Monochromated copper Kalpha used", action="store_true")
     parser.add_argument(
