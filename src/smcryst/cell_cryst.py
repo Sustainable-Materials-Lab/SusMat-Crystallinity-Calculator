@@ -707,7 +707,7 @@ def cli():
         # Axes
         plt.xlim(ttheta[0], ttheta[-1])  # X range
         # y range based on max of data
-        ax.set_ylim(0, ((args.ymax/100)+1)*(max(prf, raw)))
+        ax.set_ylim(0, ((args.ymax/100)+1)*(max(max(prf), max(raw))))
         twinax.set_ylim(0, (max(itot1)))
         # Labels
         ax.set_ylabel(r'$I$ /cm$^{-1}$', size=labsize)
@@ -766,7 +766,7 @@ def cli():
         # Axes
         plt.xlim(s[0], s[-1])  # X range
         # y range based on max of data
-        ax.set_ylim(0, ((args.ymax/100)+1)*(max(prf, raw)))
+        ax.set_ylim(0, ((args.ymax/100)+1)*(max(max(prf), max(raw))))
         twinax.set_ylim(0, (max(itot1)))
         # Labels
         if args.absolute is True:
@@ -864,7 +864,7 @@ def cli():
             # Axes
             plt.xlim(ttheta[0], ttheta[-1])  # X range
             # y range based on max of data
-            ax.set_ylim(0, ((args.ymax/100)+1)*(max(prf, raw)))
+            ax.set_ylim(0, ((args.ymax/100)+1)*(max(max(prf), max(raw))))
             # Labels
             ax.set_ylabel(r'$I$ /counts', size=labsize)
             # Can use LaTeX in labels
@@ -906,7 +906,7 @@ def cli():
             # Axes
             plt.xlim(s[0], s[-1])  # X range
             # y range based on max of data
-            ax.set_ylim(0, ((args.ymax/100)+1)*(max(prf, raw)))
+            ax.set_ylim(0, ((args.ymax/100)+1)*(max(max(prf), max(raw))))
             # Labels
             ax.set_ylabel(r'$I$ /counts', size=labsize)
             # Can use LaTeX in labels
