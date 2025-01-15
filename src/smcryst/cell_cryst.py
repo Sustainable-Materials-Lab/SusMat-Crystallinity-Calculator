@@ -69,14 +69,11 @@ def cli():
 
     args = parser.parse_args()  # map arguments to args
 
-    fname = args.input
 
-    filename = fname
 
     #Get filenames and other data from user input
 
-    rawfile = filename
-    data = np.genfromtxt(rawfile, delimiter=',', skip_header=2,
+    data = np.genfromtxt(args.input, delimiter=',', skip_header=2,
                         invalid_raise=False, unpack=False)
 
     if args.mono is True:
@@ -105,16 +102,16 @@ def cli():
 
     # Ask for filetype
     if args.png is True:
-        FILETP = 'png'
+        filetp = 'png'
     elif args.svg is True:
-        FILETP = 'svg'
+        filetp = 'svg'
     else:
-        FILETP = 'pdf'
+        filetp = 'pdf'
 
     dpipng = 600
 
     #Detect the presence of extra phases
-    with open(rawfile, encoding='utf-8') as f:
+    with open(args.input, encoding='utf-8') as f:
         rawtxt = f.readlines()
 
     if "Sqrt(y)" in rawtxt[0]:
@@ -836,10 +833,10 @@ def cli():
 
 
     # Decide output
-    if FILETP in ('png', 'PNG'):
-        plt.savefig(fname[:-4] + '.' + FILETP, bbox_inches='tight', dpi=dpipng)
+    if filetp in ('png', 'PNG'):
+        plt.savefig(args.input[:-4] + '.' + filetp, bbox_inches='tight', dpi=dpipng)
     else:
-        plt.savefig(fname[:-4] + '.' + FILETP, bbox_inches='tight')
+        plt.savefig(args.input[:-4] + '.' + filetp, bbox_inches='tight')
 
     if args.raw is True:
         if args.theta is True:
@@ -879,12 +876,12 @@ def cli():
             plt.gcf().set_size_inches([winch, hinch])
 
             # Decide output
-            if FILETP in ('png', 'PNG'):
-                plt.savefig(fname[:-4] + "_raw" + '.' + FILETP,
+            if filetp in ('png', 'PNG'):
+                plt.savefig(args.input[:-4] + "_raw" + '.' + filetp,
                             bbox_inches='tight', dpi=dpipng)
             else:
-                plt.savefig(fname[:-4] + "_raw" + '.' +
-                            FILETP, bbox_inches='tight')
+                plt.savefig(args.input[:-4] + "_raw" + '.' +
+                            filetp, bbox_inches='tight')
         else:
 
             # create figure and axes
@@ -918,12 +915,12 @@ def cli():
             # Legend
 
             # Decide output
-            if FILETP in ('png', 'PNG'):
-                plt.savefig(fname[:-4] + "_raw" + '.' + FILETP,
+            if filetp in ('png', 'PNG'):
+                plt.savefig(args.input[:-4] + "_raw" + '.' + filetp,
                             bbox_inches='tight', dpi=dpipng)
             else:
-                plt.savefig(fname[:-4] + "_raw" + '.' +
-                            FILETP, bbox_inches='tight')
+                plt.savefig(args.input[:-4] + "_raw" + '.' +
+                            filetp, bbox_inches='tight')
 
 if __name__ == '__main__':
     cli()
