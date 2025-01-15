@@ -29,3 +29,4 @@ Issues = "https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calcula
 
 [project.scripts]
 sm-cryst = "smcryst.cell_cryst:cli"
+irods-cryst = "smcryst.cell_cryst_remote:cli"
