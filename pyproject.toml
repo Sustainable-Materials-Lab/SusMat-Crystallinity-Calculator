@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "SusMat Crystallinity Calculator"
+version = "0.1.0"
+authors = [
+  { name="Samuel Eyley", email="samuel.eyley@kuleuven.be" },
+]
+description = "A collection of python scripts for determining the crystallinity of cellulosic samples"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "python-irodsclient>=2.0.0",
+    "numpy",
+    "matplotlib",
+    "scipy",
+]
+
+[project.urls]
+Homepage = "https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator"
+Issues = "https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/-/issues"
+
+[project.scripts]
+sm-cryst = "smcryst.cell_cryst:cli"
