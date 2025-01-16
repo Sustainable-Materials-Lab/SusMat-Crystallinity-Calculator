@@ -18,16 +18,19 @@ import numpy as np
 import scipy.integrate as intg
 from irods.session import iRODSSession
 from irods.path import iRODSPath
+from irods.meta import AVUOperation
 
 env_file = os.getenv('IRODS_ENVIRONMENT_FILE', os.path.expanduser(
     '~/.irods/irods_environment.json'))
 
 mpl.rcParams['font.family'] = 'sans-serif'
 
+
 def cli():
     """Calculate the crystallinity of the cellulose sample and plot the data"""
     parser = ap.ArgumentParser(description='Plot XRD from topas academic')
-    parser.add_argument("input", help="Path to iRODS collection containing TOPAS txt files")
+    parser.add_argument(
+        "input", help="Path to iRODS collection containing TOPAS txt files")
     parser.add_argument(
         "--mono", help="Monochromated copper Kalpha used", action="store_true")
     parser.add_argument(
@@ -62,7 +65,8 @@ def cli():
         "--keepbkg", help="Do not subtract the background", action="store_true")
     parser.add_argument(
         "--peaks", help="amorphous phase consists of xo_Is peaks", action="store_true")
-    parser.add_argument("--raw", help="Also plot raw data", action="store_true")
+    parser.add_argument("--raw", help="Also plot raw data",
+                        action="store_true")
     parser.add_argument(
         "--bckamorph", help="Background models amorphous content", action="store_true")
     parser.add_argument("--theta", help="plot in 2theta", action="store_true")
@@ -79,7 +83,6 @@ def cli():
         lambda_1 = 1.54056
     else:
         lambda_1 = 1.54189
-
 
     width = 17.78
 
@@ -116,16 +119,15 @@ def cli():
                 with obj.open("r") as infile:
                     rawtxt = infile.read().decode('utf-8').splitlines()
                     data = np.genfromtxt(rawtxt, delimiter=',', skip_header=2,
-                                        invalid_raise=False, unpack=False)
+                                         invalid_raise=False, unpack=False)
 
-                    #Detect the presence of extra phases
+                    # Detect the presence of extra phases
 
                     if "Sqrt(y)" in rawtxt[0]:
                         args.sqrt = True
                         data2 = np.square(data)
                         data2 = np.delete(data2, 0, 1)
                         data = np.insert(data2, 0, data[:, 0], 1)
-
 
                     if "Alpha i-PP" in rawtxt[1]:
                         args.iPP = True
@@ -166,7 +168,7 @@ def cli():
 
                     ttheta = []
 
-                    #Import Raw Data
+                    # Import Raw Data
                     if args.peaks is True:
                         if args.xye is True:
                             if args.cel2 is True:
@@ -605,39 +607,45 @@ def cli():
                     s = ((4*np.pi*np.sin((ttheta/2)*(np.pi/180)))/lambda_2)  # is Q
 
                     if args.FOLorentz is True:
-                        #iraw1 = intg.cumulative_trapezoid((raw), s, initial=0)  # Integral curve
-                        #iraw2 = intg.trapezoid((raw), s)  # Integral value
+                        # iraw1 = intg.cumulative_trapezoid((raw), s, initial=0)  # Integral curve
+                        # iraw2 = intg.trapezoid((raw), s)  # Integral value
                         icel12 = intg.trapezoid(cel1, s)
                         iamorph1 = intg.cumulative_trapezoid(
                             (amorph), s, initial=0)  # Integral curve
-                        iamorph2 = intg.trapezoid((amorph), s)  # Integral value
-                        #iprf1 = intg.cumulative_trapezoid((prf), s, initial=0)  # Integral curve
-                        #iprf2 = intg.trapezoid((prf), s)  # Integral value
-                        itot1 = intg.cumulative_trapezoid((tot), s, initial=0)  # Integral curve
+                        iamorph2 = intg.trapezoid(
+                            (amorph), s)  # Integral value
+                        # iprf1 = intg.cumulative_trapezoid((prf), s, initial=0)  # Integral curve
+                        # iprf2 = intg.trapezoid((prf), s)  # Integral value
+                        itot1 = intg.cumulative_trapezoid(
+                            (tot), s, initial=0)  # Integral curve
                         itot2 = intg.trapezoid((tot), s)  # Integral value
                         if args.rawcryst is True:
                             icryst = intg.trapezoid((cryst), s)
-                            icryst1 = intg.cumulative_trapezoid((cryst), s, initial=0)
+                            icryst1 = intg.cumulative_trapezoid(
+                                (cryst), s, initial=0)
                         else:
                             icryst = itot2-iamorph2
                             icryst1 = itot1 - iamorph1
                     else:
-                        #iraw1 = intg.cumulative_trapezoid(
+                        # iraw1 = intg.cumulative_trapezoid(
                         #    (raw*(s**2)), s, initial=0)  # Integral curve
-                        #iraw2 = intg.trapezoid((raw*(s**2)), s)  # Integral value
+                        # iraw2 = intg.trapezoid((raw*(s**2)), s)  # Integral value
                         icel12 = intg.trapezoid(cel1*(s**2), s)
                         iamorph1 = intg.cumulative_trapezoid(
                             (amorph*(s**2)), s, initial=0)  # Integral curve
-                        iamorph2 = intg.trapezoid((amorph*(s**2)), s)  # Integral value
-                        #iprf1 = intg.cumulative_trapezoid(
+                        iamorph2 = intg.trapezoid(
+                            (amorph*(s**2)), s)  # Integral value
+                        # iprf1 = intg.cumulative_trapezoid(
                         #   (prf*(s**2)), s, initial=0)  # Integral curve
-                        #iprf2 = intg.trapezoid((prf*(s**2)), s)  # Integral value
+                        # iprf2 = intg.trapezoid((prf*(s**2)), s)  # Integral value
                         itot1 = intg.cumulative_trapezoid(
                             (tot*(s**2)), s, initial=0)  # Integral curve
-                        itot2 = intg.trapezoid((tot*(s**2)), s)  # Integral value
+                        itot2 = intg.trapezoid(
+                            (tot*(s**2)), s)  # Integral value
                         if args.rawcryst is True:
                             icryst = intg.trapezoid((cryst*(s**2)), s)
-                            icryst1 = intg.cumulative_trapezoid((cryst*(s**2)), s, initial=0)
+                            icryst1 = intg.cumulative_trapezoid(
+                                (cryst*(s**2)), s, initial=0)
                         else:
                             icryst = intg.trapezoid(((tot-amorph)*(s**2)), s)
                             icryst1 = intg.cumulative_trapezoid(
@@ -660,45 +668,55 @@ def cli():
                         fPCL = iPCL2/icryst
 
                     # create figure and axes
-                    fig, ax = plt.subplots(figsize=(winch, hinch), layout='constrained') #pylint: disable=unused-variable
+                    fig, ax = plt.subplots(figsize=( # pylint: disable=unused-variable
+                        winch, hinch), layout='constrained')
 
                     # Cellulose 1
                     if args.theta is True:
                         ax1 = ax.scatter(ttheta, raw, s=0.5, color='#9D9D92')
-                        ax11, = ax.plot(ttheta, (cel1), color='b', linewidth=.5)
+                        ax11, = ax.plot(
+                            ttheta, (cel1), color='b', linewidth=.5)
                         if args.cel2 is True:
-                            ax11a, = ax.plot(ttheta, cel2, color='g', linewidth=.5)
+                            ax11a, = ax.plot(
+                                ttheta, cel2, color='g', linewidth=.5)
                         if args.iPP is True:
-                            ax11a, = ax.plot(ttheta, iPP, color='g', linewidth=.5)
+                            ax11a, = ax.plot(
+                                ttheta, iPP, color='g', linewidth=.5)
                         if args.giPP is True:
-                            ax12a, = ax.plot(ttheta, gipp, color='orange', linewidth=.5)
+                            ax12a, = ax.plot(
+                                ttheta, gipp, color='orange', linewidth=.5)
                         if args.PCL is True:
-                            ax11a, = ax.plot(ttheta, PCL, color='g', linewidth=.5)
+                            ax11a, = ax.plot(
+                                ttheta, PCL, color='g', linewidth=.5)
                         # Amorph cellulose
-                        ax12, = ax.plot(ttheta, (amorph), color='r', linewidth=.5)
+                        ax12, = ax.plot(ttheta, (amorph),
+                                        color='r', linewidth=.5)
                         # Background
                         # Profile
                         # comma required after ax2 so that legend works
                         ax2, = ax.plot(ttheta, prf)
-                        plt.setp(ax2, linewidth=0.5, color='#000000')  # set colour black
+                        # set colour black
+                        plt.setp(ax2, linewidth=0.5, color='#000000')
 
                         # Plot on right axis
                         twinax = ax.twinx()
                         ax4, = twinax.plot(ttheta, itot1)
-                        plt.setp(ax4, linewidth=0.5, linestyle='--', color='#000000')
+                        plt.setp(ax4, linewidth=0.5,
+                                 linestyle='--', color='#000000')
                         ax5, = twinax.plot(ttheta, icryst1)
                         plt.setp(ax5, linewidth=0.5, linestyle='--', color='r')
 
                         # Dummy item for chi_c in legend
                         dummy = Rectangle((0, 0), 1, 1, fc="w", fill=False,
-                                        edgecolor='none', linewidth=0)
+                                          edgecolor='none', linewidth=0)
 
                         # tick-marks
                         ax.tick_params(axis='both', which='major',
-                                    labelsize=labsize)  # Axis number fontsize
+                                       labelsize=labsize)  # Axis number fontsize
                         ax.tick_params(axis='both', which='major',
-                                    labelsize=labsize)  # Axis number fontsize
-                        twinax.tick_params(axis='both', which='major', labelsize=labsize)
+                                       labelsize=labsize)  # Axis number fontsize
+                        twinax.tick_params(
+                            axis='both', which='major', labelsize=labsize)
                         # Switch off top ticks, make bottom 'out'
                         ax.get_xaxis().set_tick_params(which='both', direction='out', top=False)
                         # Switch off right ticks on first set of axes, make bottom 'out'
@@ -720,9 +738,11 @@ def cli():
                         # Can use LaTeX in labels
                         ax.set_xlabel(r'$2\theta$ /$^{\circ}$', size=labsize)
                         if args.FOLorentz is True:
-                            twinax.set_ylabel(r'$\int I\left(q\right) dq$', size=labsize)
+                            twinax.set_ylabel(
+                                r'$\int I\left(q\right) dq$', size=labsize)
                         else:
-                            twinax.set_ylabel(r'$\int I\left(q\right)q^2 dq$', size=labsize)
+                            twinax.set_ylabel(
+                                r'$\int I\left(q\right)q^2 dq$', size=labsize)
                     else:
                         ax1 = ax.scatter(s, raw, s=0.5, color='#9D9D92')
                         ax11, = ax.plot(s, (cel1), color='b', linewidth=.5)
@@ -731,33 +751,38 @@ def cli():
                         if args.iPP is True:
                             ax11a, = ax.plot(s, iPP, color='g', linewidth=.5)
                         if args.giPP is True:
-                            ax12a, = ax.plot(s, gipp, color='orange', linewidth=.5)
+                            ax12a, = ax.plot(
+                                s, gipp, color='orange', linewidth=.5)
                         if args.PCL is True:
                             ax11a, = ax.plot(s, PCL, color='g', linewidth=.5)
                         # Amorph cellulose
                         ax12, = ax.plot(s, (amorph), color='r', linewidth=.5)
                         # Background
                         # Profile
-                        ax2, = ax.plot(s, prf)  # comma required after ax2 so that legend works
-                        plt.setp(ax2, linewidth=0.5, color='#000000')  # set colour black
+                        # comma required after ax2 so that legend works
+                        ax2, = ax.plot(s, prf)
+                        # set colour black
+                        plt.setp(ax2, linewidth=0.5, color='#000000')
 
                         # Plot on right axis
                         twinax = ax.twinx()
                         ax4, = twinax.plot(s, itot1)
-                        plt.setp(ax4, linewidth=0.5, linestyle='--', color='#000000')
+                        plt.setp(ax4, linewidth=0.5,
+                                 linestyle='--', color='#000000')
                         ax5, = twinax.plot(s, icryst1)
                         plt.setp(ax5, linewidth=0.5, linestyle='--', color='r')
 
                         # Dummy item for chi_c in legend
                         dummy = Rectangle((0, 0), 1, 1, fc="w", fill=False,
-                                        edgecolor='none', linewidth=0)
+                                          edgecolor='none', linewidth=0)
 
                         # tick-marks
                         ax.tick_params(axis='both', which='major',
-                                    labelsize=labsize)  # Axis number fontsize
+                                       labelsize=labsize)  # Axis number fontsize
                         ax.tick_params(axis='both', which='major',
-                                    labelsize=labsize)  # Axis number fontsize
-                        twinax.tick_params(axis='both', which='major', labelsize=labsize)
+                                       labelsize=labsize)  # Axis number fontsize
+                        twinax.tick_params(
+                            axis='both', which='major', labelsize=labsize)
                         # Switch off top ticks, make bottom 'out'
                         ax.get_xaxis().set_tick_params(which='both', direction='out', top=False)
                         # Switch off right ticks on first set of axes, make bottom 'out'
@@ -780,15 +805,17 @@ def cli():
                         else:
                             ax.set_ylabel(r'$I$ /Arb.', size=labsize)
                         # Can use LaTeX in labels
-                        ax.set_xlabel(r'$q=4\pi\sin\theta/\lambda$ /nm$^{-1}$', size=labsize)
+                        ax.set_xlabel(
+                            r'$q=4\pi\sin\theta/\lambda$ /nm$^{-1}$', size=labsize)
                         if args.FOLorentz is True:
-                            twinax.set_ylabel(r'$\int I\left(q\right) dq$', size=labsize)
+                            twinax.set_ylabel(
+                                r'$\int I\left(q\right) dq$', size=labsize)
                         else:
-                            twinax.set_ylabel(r'$\int I\left(q\right)q^2 dq$', size=labsize)
-
+                            twinax.set_ylabel(
+                                r'$\int I\left(q\right)q^2 dq$', size=labsize)
 
                     # Legend
-                    #irawstr = str(round(float(iraw2), 2))  # integral to 2dp for label
+                    # irawstr = str(round(float(iraw2), 2))  # integral to 2dp for label
                     iamorphstr = str(round(float(icryst), 2))
                     itotstr = str(round(float(itot2), 2))
                     chicstr = str(round(float(chi_c), 2))
@@ -807,42 +834,42 @@ def cli():
                     gamma = "\u03B3"
                     chi = "\u03C7"
 
-
                     if args.cel2 is True:
                         # pylint: disable=used-before-assignment
                         plt.legend([ax1, ax11, ax11a, ax12, ax2, ax4, ax5, dummy],
-                                ["Raw Data", f"{args.celtype}: {cel1str}%", f"{args.cel2type}: {cel2str}%", "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
+                                   ["Raw Data", f"{args.celtype}: {cel1str}%", f"{args.cel2type}: {cel2str}%", "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
                                     f"Crystalline Integral: {iamorphstr}", f"{chi}$_c$ = {chicstr}"],
-                                loc=args.legloc, frameon=False, prop={'size': legsize})
+                                   loc=args.legloc, frameon=False, prop={'size': legsize})
                     if args.iPP is True:
                         if args.giPP is True:
                             # pylint: disable=used-before-assignment
                             plt.legend([ax1, ax11, ax11a, ax12a, ax12, ax2, ax4, ax5, dummy],
-                                    ["Raw Data", f"Cellulose I{beta}: {cel1str}%", f"{alpha}-iPP: {iPPstr}%", f"{gamma}-iPP: {gippstr}%", "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
+                                       ["Raw Data", f"Cellulose I{beta}: {cel1str}%", f"{alpha}-iPP: {iPPstr}%", f"{gamma}-iPP: {gippstr}%", "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
                                         f"Crystalline Integral: {iamorphstr}", f"{chi}$_c$ = {chicstr}"],
-                                    loc=args.legloc, frameon=False, prop={'size': legsize})
+                                       loc=args.legloc, frameon=False, prop={'size': legsize})
                         else:
                             plt.legend([ax1, ax11, ax11a, ax12, ax2, ax4, ax5, dummy],
-                                    ["Raw Data", f"Cellulose I{beta}: {cel1str}%", f"{alpha}-iPP: {iPPstr}%", "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
+                                       ["Raw Data", f"Cellulose I{beta}: {cel1str}%", f"{alpha}-iPP: {iPPstr}%", "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
                                         f"Crystalline Integral: {iamorphstr}", f"{chi}$_c$ = {chicstr}"],
-                                    loc=args.legloc, frameon=False, prop={'size': legsize})
+                                       loc=args.legloc, frameon=False, prop={'size': legsize})
                     if args.PCL is True:
                         plt.legend([ax1, ax11, ax11a, ax12, ax2, ax4, ax5, dummy],
-                                ["Raw Data", f"Cellulose I{beta}: {cel1str}%", f"PCL: {PCLstr}%", "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
+                                   ["Raw Data", f"Cellulose I{beta}: {cel1str}%", f"PCL: {PCLstr}%", "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
                                     f"Crystalline Integral: {iamorphstr}", f"{chi}$_c$ = {chicstr}"],
-                                loc=args.legloc, frameon=False, prop={'size': legsize})
+                                   loc=args.legloc, frameon=False, prop={'size': legsize})
                     if (args.cel2 is False and args.iPP is False and args.PCL is False):
                         plt.legend([ax1, ax11, ax12, ax2, ax4, ax5, dummy],
-                                ["Raw Data", args.celtype, "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
+                                   ["Raw Data", args.celtype, "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
                                     f"Crystalline Integral: {iamorphstr}", f"{chi}$_c$ = {chicstr}"],
-                                loc=args.legloc, frameon=False, prop={'size': legsize})
-
+                                   loc=args.legloc, frameon=False, prop={'size': legsize})
 
                     # Decide output
-                    obj2 = session.data_objects.create(iRODSPath(args.input,obj.name[:-3]+filetp))
+                    obj2 = session.data_objects.create(
+                        iRODSPath(args.input, obj.name[:-3]+filetp))
                     with obj2.open('r+') as outfile:
                         if filetp in ('png', 'PNG'):
-                            plt.savefig(outfile, bbox_inches='tight', dpi=dpipng)
+                            plt.savefig(
+                                outfile, bbox_inches='tight', dpi=dpipng)
                         else:
                             plt.savefig(outfile, bbox_inches='tight')
 
@@ -850,18 +877,20 @@ def cli():
                         if args.theta is True:
 
                             # create figure and axes
-                            fig, ax = plt.subplots(figsize=(hinch, winch), layout='constrained')
+                            fig, ax = plt.subplots(
+                                figsize=(hinch, winch), layout='constrained')
 
                             # Cellulose 1
 
-                            ax1 = ax.plot(ttheta, raw, linewidth=0.5, color='k')
+                            ax1 = ax.plot(
+                                ttheta, raw, linewidth=0.5, color='k')
                             # Background
 
                             # tick-marks
                             ax.tick_params(axis='both', which='major',
-                                        labelsize=labsize)  # Axis number fontsize
+                                           labelsize=labsize)  # Axis number fontsize
                             ax.tick_params(axis='both', which='major',
-                                        labelsize=labsize)  # Axis number fontsize
+                                           labelsize=labsize)  # Axis number fontsize
                             # Switch off top ticks, make bottom 'out'
                             ax.get_xaxis().set_tick_params(which='both', direction='out', top=False)
                             # Switch off right ticks on first set of axes, make bottom 'out'
@@ -876,7 +905,8 @@ def cli():
                             # Labels
                             ax.set_ylabel(r'$I$ /counts', size=labsize)
                             # Can use LaTeX in labels
-                            ax.set_xlabel(r'$2\theta$ /$^{\circ}$', size=labsize)
+                            ax.set_xlabel(
+                                r'$2\theta$ /$^{\circ}$', size=labsize)
 
                             # Legend
 
@@ -884,16 +914,19 @@ def cli():
                             plt.gcf().set_size_inches([winch, hinch])
 
                             # Decide output
-                            obj2 = session.data_objects.create(iRODSPath(args.input,obj.name[:-4]+"_raw."+filetp))
+                            obj2 = session.data_objects.create(
+                                iRODSPath(args.input, obj.name[:-4]+"_raw."+filetp))
                             with obj2.open('r+') as outfile:
                                 if filetp in ('png', 'PNG'):
-                                    plt.savefig(outfile, bbox_inches='tight', dpi=dpipng)
+                                    plt.savefig(
+                                        outfile, bbox_inches='tight', dpi=dpipng)
                                 else:
                                     plt.savefig(outfile, bbox_inches='tight')
                         else:
 
                             # create figure and axes
-                            fig, ax = plt.subplots(figsize=(hinch, winch), layout='constrained')
+                            fig, ax = plt.subplots(
+                                figsize=(hinch, winch), layout='constrained')
                             # Cellulose 1
 
                             ax1 = ax.plot(s, raw, linewidth=0.5, color='k')
@@ -901,9 +934,9 @@ def cli():
 
                             # tick-marks
                             ax.tick_params(axis='both', which='major',
-                                        labelsize=labsize)  # Axis number fontsize
+                                           labelsize=labsize)  # Axis number fontsize
                             ax.tick_params(axis='both', which='major',
-                                        labelsize=labsize)  # Axis number fontsize
+                                           labelsize=labsize)  # Axis number fontsize
                             # Switch off top ticks, make bottom 'out'
                             ax.get_xaxis().set_tick_params(which='both', direction='out', top=False)
                             # Switch off right ticks on first set of axes, make bottom 'out'
@@ -918,17 +951,26 @@ def cli():
                             # Labels
                             ax.set_ylabel(r'$I$ /counts', size=labsize)
                             # Can use LaTeX in labels
-                            ax.set_xlabel(r'$q=4\pi\sin\theta/\lambda$ /nm$^{-1}$', size=labsize)
+                            ax.set_xlabel(
+                                r'$q=4\pi\sin\theta/\lambda$ /nm$^{-1}$', size=labsize)
 
                             # Legend
 
                             # Decide output
-                            obj2 = session.data_objects.create(iRODSPath(args.input,obj.name[:-4]+"_raw."+filetp))
+                            obj2 = session.data_objects.create(
+                                iRODSPath(args.input, obj.name[:-4]+"_raw."+filetp))
                             with obj2.open('r+') as outfile:
                                 if filetp in ('png', 'PNG'):
-                                    plt.savefig(outfile, bbox_inches='tight', dpi=dpipng)
+                                    plt.savefig(
+                                        outfile, bbox_inches='tight', dpi=dpipng)
                                 else:
                                     plt.savefig(outfile, bbox_inches='tight')
+                    obj3 = session.data_objects.get(
+                        iRODSPath(obj2.path[:-3], '.dat'))
+                    metadat = obj3.metadata.items()
+                    obj2.metadata.apply_atomic_operations(
+                        *[AVUOperation(operation='add', avu=meta) for meta in metadat])
+
 
 if __name__ == '__main__':
     cli()
