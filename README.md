@@ -4,20 +4,28 @@
 This python script can be used to plot the fitted WAXS data output from TOPAS academic and determine the cellulose crystallinity using the Ruland method. 
 
 ## Installation
-Requires python 3, matplotlib, scipy and numpy. In windows, installation of Anaconda python 3 distribution will cover all dependencies
+Download the repo and install with pip.
 
 ## Usage
 This requires a .txt file saved from TOPAS (academic) as input.
 
+### Local usage
 To plot the output from one fitting:
-```python
-python cell_cryst.py --xye --svg <filename without extension>
+```powershell
+sm-cryst --xye --svg <filename without extension>
 ```
 
 To plot the output from a folder full of files using powershell:
 
 ```powershell
-Get-ChildItem -Filter *.txt | ForEach-Object -Process {python cell_cryst.py --xye --svg $_.BaseName}
+Get-ChildItem -Filter *.txt | ForEach-Object -Process {sm-cryst --xye --svg $_.BaseName}
+```
+
+### Remote usage (iRODS/ManGO)
+Calculate the crystallinity for a collection (folder) containing many .txt files in iRODS. Ensure that the txt files and dat files have the same name in order to copy metadata onto the resulting image files. Enter the full path to the collection in iRODS:
+
+```powershell
+irods-cryst --xye --svg /set/home/SusMat/<project_ID>/<initials>/SWAXS/<target_collection>
 ```
 
 ## Support
