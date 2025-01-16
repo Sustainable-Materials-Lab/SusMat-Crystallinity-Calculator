@@ -3,7 +3,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "SusMat Crystallinity Calculator"
+name = "SusMat-Crystallinity-Calculator"
 version = "0.1.0"
 authors = [
   { name="Samuel Eyley", email="samuel.eyley@kuleuven.be" },
