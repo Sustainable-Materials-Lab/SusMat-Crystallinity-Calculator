@@ -19,6 +19,7 @@ import scipy.integrate as intg
 from irods.session import iRODSSession
 from irods.path import iRODSPath
 from irods.meta import AVUOperation
+from irods.exception import DataObjectDoesNotExist
 
 env_file = os.getenv('IRODS_ENVIRONMENT_FILE', os.path.expanduser(
     '~/.irods/irods_environment.json'))
@@ -965,11 +966,13 @@ def cli():
                                         outfile, bbox_inches='tight', dpi=dpipng)
                                 else:
                                     plt.savefig(outfile, bbox_inches='tight')
-                    obj3 = session.data_objects.get(
-                        iRODSPath(obj2.path[:-3], '.dat'))
-                    metadat = obj3.metadata.items()
-                    obj2.metadata.apply_atomic_operations(
-                        *[AVUOperation(operation='add', avu=meta) for meta in metadat])
+                    try:
+                        obj3 = session.data_objects.get(f"{obj2.path[:-3]}dat")
+                        metadat = obj3.metadata.items()
+                        obj2.metadata.apply_atomic_operations(
+                            *[AVUOperation(operation='add', avu=meta) for meta in metadat])
+                    except DataObjectDoesNotExist:
+                        print ("Source dat file not found, no metadata applied.")
 
 
 if __name__ == '__main__':
