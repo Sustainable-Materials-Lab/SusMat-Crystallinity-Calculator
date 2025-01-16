@@ -170,24 +170,24 @@ def cli():
                     if args.peaks is True:
                         if args.xye is True:
                             if args.cel2 is True:
-                                ttheta, raw, SigmaYobs, prf, diff, cel1, cel2, = data
+                                ttheta, raw, _, prf, diff, cel1, cel2, = data
 
                                 amorph = prf - cel1 - cel2
                             elif args.iPP is True:
                                 if args.giPP is True:
-                                    ttheta, raw, SigmaYobs, prf, diff, cel1, iPP, gipp = data
+                                    ttheta, raw, _, prf, diff, cel1, iPP, gipp = data
 
                                     amorph = prf - cel1 - gipp - iPP
                                 else:
-                                    ttheta, raw, SigmaYobs, prf, diff, cel1, iPP = data
+                                    ttheta, raw, _, prf, diff, cel1, iPP = data
 
                                     amorph = prf - cel1 - iPP
                             elif args.PCL is True:
-                                ttheta, raw, SigmaYobs, prf, diff, cel1, PCL = data
+                                ttheta, raw, _, prf, diff, cel1, PCL = data
 
                                 amorph = prf - cel1 - PCL
                             else:
-                                ttheta, raw, SigmaYobs, prf, diff, cel1 = data
+                                ttheta, raw, _, prf, diff, cel1 = data
 
                                 amorph = prf - cel1
                         else:
@@ -216,25 +216,25 @@ def cli():
                         if args.bckamorph is True:
                             if args.xye is True:
                                 if args.cel2 is True:
-                                    ttheta, raw, SigmaYobs, bck, prf, diff, cel1, cel2 = data
+                                    ttheta, raw, _, bck, prf, diff, cel1, cel2 = data
 
                                     cel2 -= bck
                                 elif args.iPP is True:
                                     if args.giPP is True:
-                                        ttheta, raw, SigmaYobs, bck, prf, diff, cel1, iPP, gipp = data
+                                        ttheta, raw, _, bck, prf, diff, cel1, iPP, gipp = data
 
                                         iPP -= bck
                                         gipp -= bck
                                     else:
-                                        ttheta, raw, SigmaYobs, bck, prf, diff, cel1, iPP = data
+                                        ttheta, raw, _, bck, prf, diff, cel1, iPP = data
 
                                         iPP -= bck
                                 elif args.PCL is True:
-                                    ttheta, raw, SigmaYobs, bck, prf, diff, cel1, PCL = data
+                                    ttheta, raw, _, bck, prf, diff, cel1, PCL = data
 
                                     PCL -= bck
                                 else:
-                                    ttheta, raw, SigmaYobs, bck, prf, diff, cel1 = data
+                                    ttheta, raw, _, bck, prf, diff, cel1 = data
 
                             else:
                                 if args.cel2 is True:
@@ -264,7 +264,7 @@ def cli():
                         else:
                             if args.xye is True:
                                 if args.cel2 is True:
-                                    ttheta, raw, SigmaYobs, bck, prf, diff, cel1, cel2, amorph = data
+                                    ttheta, raw, _, bck, prf, diff, cel1, cel2, amorph = data
 
                                     prf -= bck
                                     raw -= bck
@@ -273,7 +273,7 @@ def cli():
                                     cel2 -= bck
                                 elif args.iPP is True:
                                     if args.giPP is True:
-                                        ttheta, raw, SigmaYobs, bck, prf, diff, cel1, iPP, gipp, amorph = data
+                                        ttheta, raw, _, bck, prf, diff, cel1, iPP, gipp, amorph = data
 
                                         prf -= bck
                                         amorph -= bck
@@ -282,7 +282,7 @@ def cli():
                                         gipp -= bck
                                         raw -= bck
                                     else:
-                                        ttheta, raw, SigmaYobs, bck, prf, diff, cel1, iPP, amorph = data
+                                        ttheta, raw, _, bck, prf, diff, cel1, iPP, amorph = data
 
                                         prf -= bck
                                         amorph -= bck
@@ -291,7 +291,7 @@ def cli():
 
                                         raw -= bck
                                 elif args.PCL is True:
-                                    ttheta, raw, SigmaYobs, bck, prf, diff, cel1, PCL, amorph = data
+                                    ttheta, raw, _, bck, prf, diff, cel1, PCL, amorph = data
 
                                     prf -= bck
                                     amorph -= bck
@@ -300,7 +300,7 @@ def cli():
 
                                     raw -= bck
                                 else:
-                                    ttheta, raw, SigmaYobs, bck, prf, diff, cel1, amorph = data
+                                    ttheta, raw, _, bck, prf, diff, cel1, amorph = data
 
                                     prf -= bck
                                     amorph -= bck
@@ -355,7 +355,7 @@ def cli():
                     elif args.expback is True:
                         if args.xye is True:
                             if args.cel2 is True:
-                                ttheta, raw, SigmaYobs, prf, diff, cel1, cel2, bck, amorph = data
+                                ttheta, raw, _, prf, diff, cel1, cel2, bck, amorph = data
 
                                 prf -= bck
                                 raw -= bck
@@ -364,7 +364,7 @@ def cli():
                                 cel2 -= bck
                             elif args.iPP is True:
                                 if args.giPP is True:
-                                    ttheta, raw, SigmaYobs, prf, diff, cel1, iPP, gipp, bck, amorph = data
+                                    ttheta, raw, _, prf, diff, cel1, iPP, gipp, bck, amorph = data
 
                                     prf -= bck
                                     amorph -= bck
@@ -373,7 +373,7 @@ def cli():
                                     gipp -= bck
                                     raw -= bck
                                 else:
-                                    ttheta, raw, SigmaYobs, prf, diff, cel1, iPP, bck, amorph = data
+                                    ttheta, raw, _, prf, diff, cel1, iPP, bck, amorph = data
 
                                     prf -= bck
                                     amorph -= bck
@@ -381,7 +381,7 @@ def cli():
                                     iPP -= bck
                                     raw -= bck
                             elif args.PCL is True:
-                                ttheta, raw, SigmaYobs, prf, diff, cel1, PCL, bck, amorph = data
+                                ttheta, raw, _, prf, diff, cel1, PCL, bck, amorph = data
 
                                 prf -= bck
                                 amorph -= bck
@@ -389,7 +389,7 @@ def cli():
                                 PCL -= bck
                                 raw -= bck
                             else:
-                                ttheta, raw, SigmaYobs, prf, diff, cel1, bck, amorph = data
+                                ttheta, raw, _, prf, diff, cel1, bck, amorph = data
 
                                 prf -= bck
                                 amorph -= bck
@@ -445,39 +445,39 @@ def cli():
                         if args.xye is True:
                             if args.cel2 is True:
                                 if args.cel2amorph is True:
-                                    ttheta, raw, SigmaYobs, prf, diff, cel1, cel2, amorph = data
+                                    ttheta, raw, _, prf, diff, cel1, cel2, amorph = data
 
                                 else:
-                                    ttheta, raw, SigmaYobs, prf, diff, cel1, cel2, amorph = data
+                                    ttheta, raw, _, prf, diff, cel1, cel2, amorph = data
 
                             elif args.iPP is True:
                                 if args.giPP is True:
                                     if args.cel2amorph is True:
-                                        ttheta, raw, SigmaYobs, prf, diff, cel1, iPP, amorph, gipp = data
+                                        ttheta, raw, _, prf, diff, cel1, iPP, amorph, gipp = data
 
                                     else:
-                                        ttheta, raw, SigmaYobs, prf, diff, cel1, iPP, amorph, gipp = data
+                                        ttheta, raw, _, prf, diff, cel1, iPP, amorph, gipp = data
 
                                 else:
                                     if args.cel2amorph is True:
-                                        ttheta, raw, SigmaYobs, prf, diff, cel1, iPP, amorph = data
+                                        ttheta, raw, _, prf, diff, cel1, iPP, amorph = data
 
                                     else:
-                                        ttheta, raw, SigmaYobs, prf, diff, cel1, iPP, amorph = data
+                                        ttheta, raw, _, prf, diff, cel1, iPP, amorph = data
 
                             elif args.PCL is True:
                                 if args.cel2amorph is True:
-                                    ttheta, raw, SigmaYobs, prf, diff, cel1, PCL, amorph = data
+                                    ttheta, raw, _, prf, diff, cel1, PCL, amorph = data
 
                                 else:
-                                    ttheta, raw, SigmaYobs, prf, diff, cel1, PCL, amorph = data
+                                    ttheta, raw, _, prf, diff, cel1, PCL, amorph = data
 
                             else:
                                 if args.cel2amorph is True:
-                                    ttheta, raw, SigmaYobs, prf, diff, cel1, amorph = data
+                                    ttheta, raw, _, prf, diff, cel1, amorph = data
                                     # Raw data
                                 else:
-                                    ttheta, raw, SigmaYobs, prf, diff, cel1, amorph = data
+                                    ttheta, raw, _, prf, diff, cel1, amorph = data
 
                         else:
                             if args.cel2 is True:
@@ -660,7 +660,7 @@ def cli():
                         fPCL = iPCL2/icryst
 
                     # create figure and axes
-                    fig, ax = plt.subplots(figsize=(winch, hinch), layout='constrained')
+                    fig, ax = plt.subplots(figsize=(winch, hinch), layout='constrained') #pylint: disable=unused-variable
 
                     # Cellulose 1
                     if args.theta is True:
@@ -713,7 +713,7 @@ def cli():
                         # Axes
                         plt.xlim(ttheta[0], ttheta[-1])  # X range
                         # y range based on max of data
-                        ax.set_ylim(0, ((args.ymax/100)+1)*(max(max(prf), max(raw))))
+                        ax.set_ylim(0, ((args.ymax/100)+1)*max(*prf, *raw))
                         twinax.set_ylim(0, (max(itot1)))
                         # Labels
                         ax.set_ylabel(r'$I$ /cm$^{-1}$', size=labsize)
@@ -772,7 +772,7 @@ def cli():
                         # Axes
                         plt.xlim(s[0], s[-1])  # X range
                         # y range based on max of data
-                        ax.set_ylim(0, ((args.ymax/100)+1)*(max(max(prf), max(raw))))
+                        ax.set_ylim(0, ((args.ymax/100)+1)*max(*prf, *raw))
                         twinax.set_ylim(0, (max(itot1)))
                         # Labels
                         if args.absolute is True:
@@ -872,7 +872,7 @@ def cli():
                             # Axes
                             plt.xlim(ttheta[0], ttheta[-1])  # X range
                             # y range based on max of data
-                            ax.set_ylim(0, ((args.ymax/100)+1)*(max(max(prf), max(raw))))
+                            ax.set_ylim(0, ((args.ymax/100)+1)*max(*prf, *raw))
                             # Labels
                             ax.set_ylabel(r'$I$ /counts', size=labsize)
                             # Can use LaTeX in labels
@@ -914,7 +914,7 @@ def cli():
                             # Axes
                             plt.xlim(s[0], s[-1])  # X range
                             # y range based on max of data
-                            ax.set_ylim(0, ((args.ymax/100)+1)*(max(max(prf), max(raw))))
+                            ax.set_ylim(0, ((args.ymax/100)+1)*max(*prf, *raw))
                             # Labels
                             ax.set_ylabel(r'$I$ /counts', size=labsize)
                             # Can use LaTeX in labels
