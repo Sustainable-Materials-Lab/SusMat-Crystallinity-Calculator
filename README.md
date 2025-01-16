@@ -12,7 +12,7 @@ This requires a .txt file saved from TOPAS (academic) as input.
 ### Local usage
 To plot the output from one fitting:
 ```powershell
-sm-cryst --xye --svg <filename without extension>
+sm-cryst --xye --svg filename.txt
 ```
 
 To plot the output from a folder full of files using powershell:
@@ -25,7 +25,7 @@ Get-ChildItem -Filter *.txt | ForEach-Object -Process {sm-cryst --xye --svg $_.B
 Calculate the crystallinity for a collection (folder) containing many .txt files in iRODS. Ensure that the txt files and dat files have the same name in order to copy metadata onto the resulting image files. Enter the full path to the collection in iRODS:
 
 ```powershell
-irods-cryst --xye --svg /set/home/SusMat/<project_ID>/<initials>/SWAXS/<target_collection>
+irods-cryst --xye --svg /set/home/SusMat/$project_ID/$initials/SWAXS/$target_collection
 ```
 
 ## Support
