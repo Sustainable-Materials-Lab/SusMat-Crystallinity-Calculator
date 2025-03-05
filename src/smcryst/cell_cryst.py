@@ -681,7 +681,7 @@ def cli():
         ax4, = twinax.plot(ttheta, itot1)
         plt.setp(ax4, linewidth=0.5, linestyle='--', color='#000000')
         ax5, = twinax.plot(ttheta, icryst1)
-        plt.setp(ax5, linewidth=0.5, linestyle='--', color='r')
+        plt.setp(ax5, linewidth=0.5, linestyle='--', color='b')
 
         # Dummy item for chi_c in legend
         dummy = Rectangle((0, 0), 1, 1, fc="w", fill=False,
@@ -740,7 +740,7 @@ def cli():
         ax4, = twinax.plot(s, itot1)
         plt.setp(ax4, linewidth=0.5, linestyle='--', color='#000000')
         ax5, = twinax.plot(s, icryst1)
-        plt.setp(ax5, linewidth=0.5, linestyle='--', color='r')
+        plt.setp(ax5, linewidth=0.5, linestyle='--', color='b')
 
         # Dummy item for chi_c in legend
         dummy = Rectangle((0, 0), 1, 1, fc="w", fill=False,
