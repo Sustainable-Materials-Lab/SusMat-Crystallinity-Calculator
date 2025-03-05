@@ -603,7 +603,7 @@ def cli():
                         cryst = prf - amorph
 
                     # Copper Kalpha1 1.54056 Angstroms Kalpha=1.5418 see input black above
-                    lambda_2 = lambda_1/10  # in nm
+                    lambda_2 = lambda_1 # change here for nm conversion
                     # s = ((2*np.sin((ttheta/2)*(np.pi/180)))/lambda_2) #numpy uses radians
                     s = ((4*np.pi*np.sin((ttheta/2)*(np.pi/180)))/lambda_2)  # is Q
 
@@ -806,8 +806,10 @@ def cli():
                         else:
                             ax.set_ylabel(r'$I$ /Arb.', size=labsize)
                         # Can use LaTeX in labels
-                        ax.set_xlabel(
-                            r'$q=4\pi\sin\theta/\lambda$ /nm$^{-1}$', size=labsize)
+                        angstrom = "\u212B"
+                        labelstart = r'$q=4\pi\sin\theta/\lambda$ /'
+                        labelend = r'$^{-1}$'
+                        ax.set_xlabel(f"{labelstart}{angstrom}{labelend}", size=labsize)
                         if args.FOLorentz is True:
                             twinax.set_ylabel(
                                 r'$\int I\left(q\right) dq$', size=labsize)
@@ -952,8 +954,10 @@ def cli():
                             # Labels
                             ax.set_ylabel(r'$I$ /counts', size=labsize)
                             # Can use LaTeX in labels
-                            ax.set_xlabel(
-                                r'$q=4\pi\sin\theta/\lambda$ /nm$^{-1}$', size=labsize)
+                            angstrom = "\u212B"
+                            labelstart = r'$q=4\pi\sin\theta/\lambda$ /'
+                            labelend = r'$^{-1}$'
+                            ax.set_xlabel(f"{labelstart}{angstrom}{labelend}", size=labsize)
 
                             # Legend
 
