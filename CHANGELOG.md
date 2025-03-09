@@ -1,3 +1,15 @@
+# [0.2.0](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v0.1.2...v0.2.0) (2025-03-09)
+
+
+### Bug Fixes
+
+* legend not showing Jeffamine label ([d51b193](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/d51b193408c11e29610fff7083c6ce2d8cfca63d))
+
+
+### Features
+
+* detect and import jeffamine data for local files ([1e04353](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/1e04353255db049ab4450397870b88fca4ba2f5f))
+
 ## [0.1.2](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v0.1.1...v0.1.2) (2025-03-05)
 
 
