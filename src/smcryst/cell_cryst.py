@@ -145,6 +145,8 @@ def cli():
 
     if "Jeffamine ED2003" in rawtxt[1]:
         args.jeffamine = True
+    else:
+        args.jeffamine = False
 
     if "Amorphous,Background" in rawtxt[1]:
         args.cel2amorph = True
@@ -862,7 +864,7 @@ def cli():
                 ["Raw Data", f"Cellulose I{beta}: {cel1str}%", f"Jeffamine: {jeffaminestr}%", "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
                     f"Crystalline Integral: {iamorphstr}", f"{chi}$_c$ = {chicstr}"],
                 loc=args.legloc, frameon=False, prop={'size': legsize})
-    if (args.cel2 is False and args.iPP is False and args.PCL is False):
+    if (args.cel2 is False and args.iPP is False and args.PCL is False and args.jeffamine is False):
         plt.legend([ax1, ax11, ax12, ax2, ax4, ax5, dummy],
                 ["Raw Data", args.celtype, "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
                     f"Crystalline Integral: {iamorphstr}", f"{chi}$_c$ = {chicstr}"],
