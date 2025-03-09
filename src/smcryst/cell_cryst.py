@@ -143,6 +143,11 @@ def cli():
     else:
         args.cel2 = False
 
+    if "Jeffamine ED2003" in rawtxt[1]:
+        args.jeffamine = True
+    else:
+        args.jeffamine = False
+
     if "Amorphous,Background" in rawtxt[1]:
         args.cel2amorph = True
     else:
@@ -292,6 +297,14 @@ def cli():
                     cel1 -= bck
                     PCL -= bck
 
+                    raw -= bck
+                elif args.jeffamine is True:
+                    ttheta, raw, _, bck, prf, diff, cel1, jeffamine, amorph = data
+
+                    prf -= bck
+                    amorph -= bck
+                    cel1 -= bck
+                    jeffamine -= bck
                     raw -= bck
                 else:
                     ttheta, raw, _, bck, prf, diff, cel1, amorph = data
@@ -523,6 +536,8 @@ def cli():
         gipp *= args.exposure
     if args.PCL is True:
         PCL *= args.exposure
+    if args.jeffamine is True:
+        jeffamine *= args.exposure
 
     if args.clip is True:
         startval = np.where(ttheta > args.xmin)[0][0]
@@ -542,6 +557,8 @@ def cli():
             gipp = gipp[startval:endval]
         if args.PCL is True:
             PCL = PCL[startval:endval]
+        if args.jeffamine is True:
+            jeffamine = jeffamine[startval:endval]
 
     if args.linsub is True:  # Remove the linear portion of the "amorphous" diffraction and add to the background
         minamorph = min(amorph)
@@ -568,6 +585,11 @@ def cli():
             PCL -= minpcl
             prf -= minpcl
             raw -= minpcl
+        if args.jeffamine is True:
+            minjeffamine = min(jeffamine)
+            jeffamine -= minjeffamine
+            prf -= minjeffamine
+            raw -= minjeffamine
         prf = prf - minamorph - mincel1
         raw = raw - minamorph - mincel1
     # remove background from cel1 and amorph
@@ -586,6 +608,8 @@ def cli():
             gipp += bck
         if args.PCL is True:
             PCL += bck
+        if args.jeffamine is True:
+            jeffamine += bck
 
     tot = prf
 
@@ -652,6 +676,9 @@ def cli():
     if args.PCL is True:
         iPCL2 = intg.trapezoid(PCL*(s**2), s)
         fPCL = iPCL2/icryst
+    if args.jeffamine is True:
+        ijeffamine2 = intg.trapezoid(jeffamine*(s**2), s)
+        fjeffamine = ijeffamine2/icryst
 
     # create figure and axes
     fig, ax = plt.subplots(figsize=(winch, hinch), layout='constrained') #pylint: disable=unused-variable
@@ -728,6 +755,8 @@ def cli():
             ax12a, = ax.plot(s, gipp, color='orange', linewidth=.5)
         if args.PCL is True:
             ax11a, = ax.plot(s, PCL, color='g', linewidth=.5)
+        if args.jeffamine is True:
+            ax11a, = ax.plot(s, jeffamine, color='g', linewidth=.5)
         # Amorph cellulose
         ax12, = ax.plot(s, (amorph), color='r', linewidth=.5)
         # Background
@@ -798,6 +827,8 @@ def cli():
         gippstr = str(round(float(100*fgipp), 2))
     if args.PCL is True:
         PCLstr = str(round(float(100*fPCL), 2))
+    if args.jeffamine is True:
+        jeffaminestr = str(round(float(100*fjeffamine), 2))
 
     alpha = "\u03B1"
     beta = "\u03B2"
@@ -828,7 +859,12 @@ def cli():
                 ["Raw Data", f"Cellulose I{beta}: {cel1str}%", f"PCL: {PCLstr}%", "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
                     f"Crystalline Integral: {iamorphstr}", f"{chi}$_c$ = {chicstr}"],
                 loc=args.legloc, frameon=False, prop={'size': legsize})
-    if (args.cel2 is False and args.iPP is False and args.PCL is False):
+    if args.jeffamine is True:
+        plt.legend([ax1, ax11, ax11a, ax12, ax2, ax4, ax5, dummy],
+                ["Raw Data", f"Cellulose I{beta}: {cel1str}%", f"Jeffamine: {jeffaminestr}%", "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
+                    f"Crystalline Integral: {iamorphstr}", f"{chi}$_c$ = {chicstr}"],
+                loc=args.legloc, frameon=False, prop={'size': legsize})
+    if (args.cel2 is False and args.iPP is False and args.PCL is False and args.jeffamine is False):
         plt.legend([ax1, ax11, ax12, ax2, ax4, ax5, dummy],
                 ["Raw Data", args.celtype, "Amorphous", "Fitted Profile", f"Profile Integral: {itotstr}",
                     f"Crystalline Integral: {iamorphstr}", f"{chi}$_c$ = {chicstr}"],
