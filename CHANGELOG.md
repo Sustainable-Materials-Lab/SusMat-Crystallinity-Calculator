@@ -1,3 +1,10 @@
+## [0.2.1](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v0.2.0...v0.2.1) (2025-06-16)
+
+
+### Bug Fixes
+
+* **remote:** explicitly state output format for saving figures rather than relying on file extension. Fixes [#1](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/issues/1) ([a96226b](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/a96226b00df3dca68f93b5133bcef81578675175))
+
 # [0.2.0](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v0.1.2...v0.2.0) (2025-03-09)
 
 
