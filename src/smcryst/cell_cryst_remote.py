@@ -872,9 +872,9 @@ def cli():
                     with obj2.open('r+') as outfile:
                         if filetp in ('png', 'PNG'):
                             plt.savefig(
-                                outfile, bbox_inches='tight', dpi=dpipng)
+                                outfile, bbox_inches='tight', dpi=dpipng, format=filetp)
                         else:
-                            plt.savefig(outfile, bbox_inches='tight')
+                            plt.savefig(outfile, bbox_inches='tight',format=filetp)
 
                     if args.raw is True:
                         if args.theta is True:
@@ -922,9 +922,9 @@ def cli():
                             with obj2.open('r+') as outfile:
                                 if filetp in ('png', 'PNG'):
                                     plt.savefig(
-                                        outfile, bbox_inches='tight', dpi=dpipng)
+                                        outfile, bbox_inches='tight', dpi=dpipng, format=filetp)
                                 else:
-                                    plt.savefig(outfile, bbox_inches='tight')
+                                    plt.savefig(outfile, bbox_inches='tight', format=filetp)
                         else:
 
                             # create figure and axes
@@ -967,9 +967,9 @@ def cli():
                             with obj2.open('r+') as outfile:
                                 if filetp in ('png', 'PNG'):
                                     plt.savefig(
-                                        outfile, bbox_inches='tight', dpi=dpipng)
+                                        outfile, bbox_inches='tight', dpi=dpipng, format=filetp)
                                 else:
-                                    plt.savefig(outfile, bbox_inches='tight')
+                                    plt.savefig(outfile, bbox_inches='tight', format=filetp)
                     try:
                         obj3 = session.data_objects.get(f"{obj2.path[:-3]}dat")
                         metadat = obj3.metadata.items()
