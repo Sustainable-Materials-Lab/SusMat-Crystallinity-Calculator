@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import numpy as np
 import scipy.integrate as intg
+from smcryst.data_importer import DataImporter
 
 
 mpl.rcParams['font.family'] = 'sans-serif'
@@ -51,8 +52,6 @@ def cli():
     parser.add_argument(
         "--linsub", help="Subtract linear portion of amorphous scattering", action="store_true")
     parser.add_argument(
-        "--xye", help="input file had errors included", action="store_true")
-    parser.add_argument(
         "--keepbkg", help="Do not subtract the background", action="store_true")
     parser.add_argument(
         "--peaks", help="amorphous phase consists of xo_Is peaks", action="store_true")
@@ -69,38 +68,58 @@ def cli():
 
     args = parser.parse_args()  # map arguments to args
 
+    # Initialize data importer and load data
+    importer = DataImporter(args)
+    data_dict = importer.load_data(args.input)
+    
+    # Extract variables from the data dictionary for backward compatibility
+    ttheta = data_dict['ttheta']
+    raw = data_dict['raw'] 
+    prf = data_dict['prf']
+    diff = data_dict['diff']
+    cel1 = data_dict['cel1']
+    amorph = data_dict['amorph']
+    bck = data_dict.get('bck', np.zeros_like(ttheta))
+    
+    # Extract phase-specific data if present
+    cel2 = data_dict.get('cel2')
+    iPP = data_dict.get('iPP') 
+    gipp = data_dict.get('gipp')
+    PCL = data_dict.get('PCL')
+    jeffamine = data_dict.get('jeffamine')
+    
+    # Set phase flags from importer
+    args.cel2 = importer.cel2
+    args.iPP = importer.iPP
+    args.giPP = importer.giPP
+    args.PCL = importer.PCL
+    args.jeffamine = importer.jeffamine
+    args.xye = importer.xye
 
-
-    #Get filenames and other data from user input
-
-    data = np.genfromtxt(args.input, delimiter=',', skip_header=2,
-                        invalid_raise=False, unpack=False)
-
+    # Set wavelength based on monochromation
     if args.mono is True:
         lambda_1 = 1.54056
     else:
         lambda_1 = 1.54189
 
-
+    # Configure plotting parameters
     width = 17.78
-
     if args.onecol is True:
         width = width/2
     winch = width/2.54  # pyplot is american so uses inches
-
     hinch = winch/1.75  # ISO aspect ratio
 
     if width <= 9:  # Change font sizes based on image size
         labsize = 6
         legsize = 4
-    elif width > 9 and width <= 15:
+    elif width > 9 and width <= 15:  
         labsize = 8
         legsize = 6
     else:
         labsize = 10
         legsize = 6
 
-    # Ask for filetype
+    # Determine output file format
     if args.png is True:
         filetp = 'png'
     elif args.svg is True:
@@ -110,509 +129,8 @@ def cli():
 
     dpipng = 600
 
-    #Detect the presence of extra phases
-    with open(args.input, encoding='utf-8') as f:
-        rawtxt = f.readlines()
-
-    if "Sqrt(y)" in rawtxt[0]:
-        args.sqrt = True
-        data2 = np.square(data)
-        data2 = np.delete(data2, 0, 1)
-        data = np.insert(data2, 0, data[:, 0], 1)
-
-
-    if "Alpha i-PP" in rawtxt[1]:
-        args.iPP = True
-    else:
-        args.iPP = False
-
-    if "Gamma i-PP" in rawtxt[1]:
-        args.giPP = True
-    else:
-        args.giPP = False
-
-    if "PCL" in rawtxt[1]:
-        args.PCL = True
-    else:
-        args.PCL = False
-
-    if "Cellulose II" in rawtxt[1]:
-        args.cel2 = True
-    elif args.cel2 is True:
-        args.cel2 = True
-    else:
-        args.cel2 = False
-
-    if "Jeffamine ED2003" in rawtxt[1]:
-        args.jeffamine = True
-    else:
-        args.jeffamine = False
-
-    if "Amorphous,Background" in rawtxt[1]:
-        args.cel2amorph = True
-    else:
-        args.cel2amorph = False
-    if "Bkg" in rawtxt[1]:
-        args.background = True
-    else:
-        args.background = False
-    if "Background,Amorphous" in rawtxt[1]:
-        args.expback = True
-    else:
-        args.expback = False
-
-    data = data.T
-
-    ttheta = []
-
-    #Import Raw Data
-    if args.peaks is True:
-        if args.xye is True:
-            if args.cel2 is True:
-                ttheta, raw, _, prf, diff, cel1, cel2, = data
-
-                amorph = prf - cel1 - cel2
-            elif args.iPP is True:
-                if args.giPP is True:
-                    ttheta, raw, _, prf, diff, cel1, iPP, gipp = data
-
-                    amorph = prf - cel1 - gipp - iPP
-                else:
-                    ttheta, raw, _, prf, diff, cel1, iPP = data
-
-                    amorph = prf - cel1 - iPP
-            elif args.PCL is True:
-                ttheta, raw, _, prf, diff, cel1, PCL = data
-
-                amorph = prf - cel1 - PCL
-            else:
-                ttheta, raw, _, prf, diff, cel1 = data
-
-                amorph = prf - cel1
-        else:
-            if args.cel2 is True:
-                ttheta, raw, prf, diff, cel1, cel2 = data
-
-                amorph = prf - cel1 - cel2
-            elif args.iPP is True:
-                if args.giPP is True:
-                    ttheta, raw, prf, diff, cel1, iPP, gipp = data
-
-                    amorph = prf - cel1 - gipp - iPP
-                else:
-                    ttheta, raw, prf, diff, cel1, iPP = data
-
-                    amorph = prf - cel1 - iPP
-            elif args.PCL is True:
-                ttheta, raw, prf, diff, cel1, PCL = data
-
-                amorph = prf - cel1 - PCL
-            else:
-                ttheta, raw, prf, diff, cel1 = data
-
-                amorph = prf - cel1
-    elif args.background is True:
-        if args.bckamorph is True:
-            if args.xye is True:
-                if args.cel2 is True:
-                    ttheta, raw, _, bck, prf, diff, cel1, cel2 = data
-
-                    cel2 -= bck
-                elif args.iPP is True:
-                    if args.giPP is True:
-                        ttheta, raw, _, bck, prf, diff, cel1, iPP, gipp = data
-
-                        iPP -= bck
-                        gipp -= bck
-                    else:
-                        ttheta, raw, _, bck, prf, diff, cel1, iPP = data
-
-                        iPP -= bck
-                elif args.PCL is True:
-                    ttheta, raw, _, bck, prf, diff, cel1, PCL = data
-
-                    PCL -= bck
-                else:
-                    ttheta, raw, _, bck, prf, diff, cel1 = data
-
-            else:
-                if args.cel2 is True:
-                    ttheta, raw, bck, prf, diff, cel1, cel2 = data
-
-                    cel2 -= bck
-                elif args.iPP is True:
-                    if args.giPP is True:
-                        ttheta, raw, bck, prf, diff, cel1, iPP, gipp = data
-
-                        iPP -= bck
-                        gipp -= bck
-                    else:
-                        ttheta, raw, bck, prf, diff, cel1, iPP = data
-
-                        iPP -= bck
-                elif args.PCL is True:
-                    ttheta, raw, bck, prf, diff, cel1, PCL = data
-
-                    PCL -= bck
-                else:
-                    ttheta, raw, bck, prf, diff, cel1 = data
-
-            cel1 -= bck
-            amorph = copy.copy(bck)
-            bck *= 0
-        else:
-            if args.xye is True:
-                if args.cel2 is True:
-                    ttheta, raw, _, bck, prf, diff, cel1, cel2, amorph = data
-
-                    prf -= bck
-                    raw -= bck
-                    amorph -= bck
-                    cel1 -= bck
-                    cel2 -= bck
-                elif args.iPP is True:
-                    if args.giPP is True:
-                        ttheta, raw, _, bck, prf, diff, cel1, iPP, gipp, amorph = data
-
-                        prf -= bck
-                        amorph -= bck
-                        cel1 -= bck
-                        iPP -= bck
-                        gipp -= bck
-                        raw -= bck
-                    else:
-                        ttheta, raw, _, bck, prf, diff, cel1, iPP, amorph = data
-
-                        prf -= bck
-                        amorph -= bck
-                        cel1 -= bck
-                        iPP -= bck
-
-                        raw -= bck
-                elif args.PCL is True:
-                    ttheta, raw, _, bck, prf, diff, cel1, PCL, amorph = data
-
-                    prf -= bck
-                    amorph -= bck
-                    cel1 -= bck
-                    PCL -= bck
-
-                    raw -= bck
-                elif args.jeffamine is True:
-                    ttheta, raw, _, bck, prf, diff, cel1, jeffamine, amorph = data
-
-                    prf -= bck
-                    amorph -= bck
-                    cel1 -= bck
-                    jeffamine -= bck
-                    raw -= bck
-                else:
-                    ttheta, raw, _, bck, prf, diff, cel1, amorph = data
-
-                    prf -= bck
-                    amorph -= bck
-                    cel1 -= bck
-                    raw -= bck
-            else:
-                if args.cel2 is True:
-                    ttheta, raw, bck, prf, diff, cel1, cel2, amorph = data
-
-                    prf -= bck
-                    amorph -= bck
-                    cel1 -= bck
-                    cel2 -= bck
-                    amorph -= bck
-                    raw -= bck
-                elif args.iPP is True:
-                    if args.giPP is True:
-                        ttheta, raw, bck, prf, diff, cel1, iPP, gipp, amorph = data
-
-                        prf -= bck
-                        amorph -= bck
-                        cel1 -= bck
-                        iPP -= bck
-                        gipp -= bck
-                        raw -= bck
-                    else:
-                        ttheta, raw, bck, prf, diff, cel1, iPP, amorph = data
-
-                        prf -= bck
-                        amorph -= bck
-                        cel1 -= bck
-                        iPP -= bck
-                        amorph -= bck
-                        raw -= bck
-                elif args.PCL is True:
-                    ttheta, raw, bck, prf, diff, cel1, PCL, amorph = data
-
-                    prf -= bck
-                    amorph -= bck
-                    cel1 -= bck
-                    PCL -= bck
-                    amorph -= bck
-                    raw -= bck
-                else:
-                    ttheta, raw, bck, prf, diff, cel1, amorph = data
-
-                    prf -= bck
-                    amorph -= bck
-                    cel1 -= bck
-                    amorph -= bck
-                    raw -= bck
-    elif args.expback is True:
-        if args.xye is True:
-            if args.cel2 is True:
-                ttheta, raw, _, prf, diff, cel1, cel2, bck, amorph = data
-
-                prf -= bck
-                raw -= bck
-                amorph -= bck
-                cel1 -= bck
-                cel2 -= bck
-            elif args.iPP is True:
-                if args.giPP is True:
-                    ttheta, raw, _, prf, diff, cel1, iPP, gipp, bck, amorph = data
-
-                    prf -= bck
-                    amorph -= bck
-                    cel1 -= bck
-                    iPP -= bck
-                    gipp -= bck
-                    raw -= bck
-                else:
-                    ttheta, raw, _, prf, diff, cel1, iPP, bck, amorph = data
-
-                    prf -= bck
-                    amorph -= bck
-                    cel1 -= bck
-                    iPP -= bck
-                    raw -= bck
-            elif args.PCL is True:
-                ttheta, raw, _, prf, diff, cel1, PCL, bck, amorph = data
-
-                prf -= bck
-                amorph -= bck
-                cel1 -= bck
-                PCL -= bck
-                raw -= bck
-            else:
-                ttheta, raw, _, prf, diff, cel1, bck, amorph = data
-
-                prf -= bck
-                amorph -= bck
-                cel1 -= bck
-                raw -= bck
-        else:
-            if args.cel2 is True:
-                ttheta, raw, prf, diff, cel1, cel2, bck, amorph = data
-
-                prf -= bck
-                amorph -= bck
-                cel1 -= bck
-                cel2 -= bck
-                amorph -= bck
-                raw -= bck
-            elif args.iPP is True:
-                if args.giPP is True:
-                    ttheta, raw, prf, diff, cel1, iPP, gipp, bck, amorph = data
-
-                    prf -= bck
-                    amorph -= bck
-                    cel1 -= bck
-                    iPP -= bck
-                    gipp -= bck
-                    raw -= bck
-                else:
-                    ttheta, raw, prf, diff, cel1, iPP, bck, amorph = data
-
-                    prf -= bck
-                    amorph -= bck
-                    cel1 -= bck
-                    iPP -= bck
-                    amorph -= bck
-                    raw -= bck
-            elif args.PCL is True:
-                ttheta, raw, prf, diff, cel1, PCL, bck, amorph = data
-
-                prf -= bck
-                amorph -= bck
-                cel1 -= bck
-                PCL -= bck
-                amorph -= bck
-                raw -= bck
-            else:
-                ttheta, raw, prf, diff, cel1, bck, amorph = data
-
-                prf -= bck
-                amorph -= bck
-                cel1 -= bck
-                amorph -= bck
-                raw -= bck
-    else:
-        if args.xye is True:
-            if args.cel2 is True:
-                if args.cel2amorph is True:
-                    ttheta, raw, _, prf, diff, cel1, cel2, amorph = data
-
-                else:
-                    ttheta, raw, _, prf, diff, cel1, cel2, amorph = data
-
-            elif args.iPP is True:
-                if args.giPP is True:
-                    if args.cel2amorph is True:
-                        ttheta, raw, _, prf, diff, cel1, iPP, amorph, gipp = data
-
-                    else:
-                        ttheta, raw, _, prf, diff, cel1, iPP, amorph, gipp = data
-
-                else:
-                    if args.cel2amorph is True:
-                        ttheta, raw, _, prf, diff, cel1, iPP, amorph = data
-
-                    else:
-                        ttheta, raw, _, prf, diff, cel1, iPP, amorph = data
-
-            elif args.PCL is True:
-                if args.cel2amorph is True:
-                    ttheta, raw, _, prf, diff, cel1, PCL, amorph = data
-
-                else:
-                    ttheta, raw, _, prf, diff, cel1, PCL, amorph = data
-
-            else:
-                if args.cel2amorph is True:
-                    ttheta, raw, _, prf, diff, cel1, amorph = data
-                    # Raw data
-                else:
-                    ttheta, raw, _, prf, diff, cel1, amorph = data
-
-        else:
-            if args.cel2 is True:
-                if args.cel2amorph is True:
-                    ttheta, raw, prf, diff, cel1, cel2, amorph = data
-
-                else:
-                    ttheta, raw, prf, diff, cel1, cel2, amorph = data
-
-            elif args.iPP is True:
-                if args.giPP is True:
-                    if args.cel2amorph is True:
-                        ttheta, raw, prf, diff, cel1, iPP, amorph, gipp = data
-
-                    else:
-                        ttheta, raw, prf, diff, cel1, iPP, amorph, gipp = data
-
-                else:
-                    if args.cel2amorph is True:
-                        ttheta, raw, prf, diff, cel1, iPP, amorph = data
-
-                    else:
-                        ttheta, raw, prf, diff, cel1, iPP, amorph = data
-
-            elif args.PCL is True:
-                if args.cel2amorph is True:
-                    ttheta, raw, prf, diff, cel1, PCL, amorph = data
-
-                else:
-                    ttheta, raw, prf, diff, cel1, PCL, amorph = data
-
-            else:
-                if args.cel2amorph is True:
-                    ttheta, raw, prf, diff, cel1, amorph = data
-                    # Raw data
-                else:
-                    ttheta, raw, prf, diff, cel1, amorph = data
-
-    raw *= args.exposure
-    prf *= args.exposure
-    diff *= args.exposure
-    cel1 *= args.exposure
-    amorph *= args.exposure
-    if args.cel2 is True:
-        cel2 *= args.exposure
-    if args.iPP is True:
-        iPP *= args.exposure
-    if args.giPP is True:
-        gipp *= args.exposure
-    if args.PCL is True:
-        PCL *= args.exposure
-    if args.jeffamine is True:
-        jeffamine *= args.exposure
-
-    if args.clip is True:
-        startval = np.where(ttheta > args.xmin)[0][0]
-        endval = np.where(ttheta > args.xmax)[0][0]
-        ttheta = ttheta[startval:endval]
-        raw = raw[startval:endval]
-        prf = prf[startval:endval]
-        diff = diff[startval:endval]
-        bck = bck[startval:endval]
-        cel1 = cel1[startval:endval]
-        amorph = amorph[startval:endval]
-        if args.cel2 is True:
-            cel2 = cel2[startval:endval]
-        if args.iPP is True:
-            iPP = iPP[startval:endval]
-        if args.giPP is True:
-            gipp = gipp[startval:endval]
-        if args.PCL is True:
-            PCL = PCL[startval:endval]
-        if args.jeffamine is True:
-            jeffamine = jeffamine[startval:endval]
-
-    if args.linsub is True:  # Remove the linear portion of the "amorphous" diffraction and add to the background
-        minamorph = min(amorph)
-        amorph -= minamorph
-        mincel1 = min(cel1)
-        cel1 -= mincel1
-        if args.cel2 is True:
-            mincel2 = min(cel2)
-            cel2 -= mincel2
-            prf -= mincel2
-            raw -= mincel2
-        if args.iPP is True:
-            miniPP = min(iPP)
-            iPP -= miniPP
-            prf -= miniPP
-            raw -= miniPP
-        if args.giPP is True:
-            mingipp = min(gipp)
-            gipp -= mingipp
-            prf -= mingipp
-            raw -= mingipp
-        if args.PCL is True:
-            minpcl = min(PCL)
-            PCL -= minpcl
-            prf -= minpcl
-            raw -= minpcl
-        if args.jeffamine is True:
-            minjeffamine = min(jeffamine)
-            jeffamine -= minjeffamine
-            prf -= minjeffamine
-            raw -= minjeffamine
-        prf = prf - minamorph - mincel1
-        raw = raw - minamorph - mincel1
-    # remove background from cel1 and amorph
-    # For plotting add background first
-
-    if args.keepbkg is True:
-        raw += bck
-        cel1 += bck
-        prf += bck
-        amorph += bck
-        if args.cel2 is True:
-            cel2 += bck
-        if args.iPP is True:
-            iPP += bck
-        if args.giPP is True:
-            gipp += bck
-        if args.PCL is True:
-            PCL += bck
-        if args.jeffamine is True:
-            jeffamine += bck
-
+    # Set up total intensity and crystalline phase for calculations
     tot = prf
-
     if args.rawcryst is True:
         tot = raw
         cryst = prf - amorph
