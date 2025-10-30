@@ -1,3 +1,10 @@
+# [0.3.0](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v0.2.1...v0.3.0) (2025-10-30)
+
+
+### Features
+
+* **core:** autodetect presence of standard errors in input data ([9f54c1b](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/9f54c1b5b888a1fe04582c8e6923e4cd9f9a46d1))
+
 ## [0.2.1](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v0.2.0...v0.2.1) (2025-06-16)
 
 
