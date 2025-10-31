@@ -26,7 +26,7 @@ Get-ChildItem -Filter *.txt | ForEach-Object -Process {sm-cryst --svg $_.BaseNam
 Calculate the crystallinity for a collection (folder) containing many .txt files in iRODS. Ensure that the txt files and dat files have the same name in order to copy metadata onto the resulting image files. Enter the full path to the collection in iRODS:
 
 ```powershell
-irods-cryst --svg /set/home/SusMat/$project_ID/$initials/SWAXS/$target_collection
+irods-cryst --svg <path_to_collection>
 ```
 
 ## Support
