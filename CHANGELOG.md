@@ -1,3 +1,15 @@
+# [1.0.0](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v0.3.0...v1.0.0) (2025-10-31)
+
+
+### Features
+
+* added packaging metadata ([5e8d10d](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/5e8d10dfebf9b29487fd31d077afc2879a12382c))
+
+
+### BREAKING CHANGES
+
+* no longer namespace package
+
 # [0.3.0](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v0.2.1...v0.3.0) (2025-10-30)
 
 
