@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["uv_build>=0.9.6,<0.10.0"]
+build-backend = "uv_build"
 
 [project]
 name = "SusMat-Crystallinity-Calculator"
@@ -30,3 +30,6 @@ Issues = "https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calcula
 [project.scripts]
 sm-cryst = "smcryst.cell_cryst:cli"
 irods-cryst = "smcryst.cell_cryst_remote:cli"
+
+[tool.uv.build-backend]
+module-name = "smcryst"
