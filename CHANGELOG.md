@@ -1,3 +1,15 @@
+# [2.0.0](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v1.0.0...v2.0.0) (2025-11-03)
+
+
+### Features
+
+* **core:** switch to UV build system ([3db31dd](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/3db31dd8c73f7302137a9dc29af21bf9003030f9))
+
+
+### BREAKING CHANGES
+
+* **core:** switch build system
+
 # [1.0.0](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v0.3.0...v1.0.0) (2025-10-31)
 
 
