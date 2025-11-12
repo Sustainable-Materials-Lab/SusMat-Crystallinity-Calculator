@@ -1,3 +1,10 @@
+## [2.0.1](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.0...v2.0.1) (2025-11-12)
+
+
+### Bug Fixes
+
+* enable vuln check with trivy ([93aea72](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/93aea7263e2ccd990f5a3df60c00808d346eb24d))
+
 # [2.0.0](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v1.0.0...v2.0.0) (2025-11-03)
 
 
