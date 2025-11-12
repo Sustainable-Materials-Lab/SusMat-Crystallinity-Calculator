@@ -7,7 +7,7 @@ include:
     inputs:
       package-enabled: true
       publish-enabled: true
-      trivy-disabled: true
+      # trivy-disabled: true
       sbom-disabled: true
       build-system: "uv"
   # semantic-release template
