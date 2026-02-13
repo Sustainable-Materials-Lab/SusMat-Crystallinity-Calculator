@@ -145,7 +145,7 @@ class DataImporter:
         self.expback = "Background,Amorphous" in header_line
         
         # Detect if file has errors included (xye format)
-        self.xye = "SigmaYObs" in header_line
+        self.xye = "SigmaYobs" in header_line
         
         # Cellulose II detection (can be overridden by args)
         if "Cellulose II" in header_line:
