@@ -1,3 +1,10 @@
+## [2.0.2](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.1...v2.0.2) (2026-02-13)
+
+
+### Bug Fixes
+
+* typo preventing recognition of error column. Fixes [#3](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/issues/3) ([ddc5d2d](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/ddc5d2da9cff1fa474cc61435361469d78de94c8))
+
 ## [2.0.1](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.0...v2.0.1) (2025-11-12)
 
 
