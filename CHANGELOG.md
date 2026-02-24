@@ -1,3 +1,10 @@
+## [2.0.4](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.3...v2.0.4) (2026-02-24)
+
+
+### Bug Fixes
+
+* add dependencies to avoid vulnerable matplotlib dependencies. ([d759ca5](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/d759ca5a79a6a2e8ef3b64875b5e274b50581899))
+
 ## [2.0.3](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.2...v2.0.3) (2026-02-24)
 
 
