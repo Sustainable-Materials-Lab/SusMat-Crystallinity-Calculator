@@ -21,6 +21,8 @@ dependencies = [
     "numpy",
     "matplotlib",
     "scipy",
+    "fonttools>=4.60.2",
+    "pillow>=12.1.1",
 ]
 
 [project.urls]

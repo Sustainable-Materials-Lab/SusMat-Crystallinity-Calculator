@@ -64,7 +64,6 @@ class DataImporter:
             # Set raw_text for phase detection
             self.raw_text = input_data
             # Detect phases based on raw text
-            print("raw data input")
             self._detect_phases_from_text()
         
         # Parse the data based on detected phases and configurations
