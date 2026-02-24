@@ -1,3 +1,10 @@
+## [2.0.3](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.2...v2.0.3) (2026-02-24)
+
+
+### Bug Fixes
+
+* add debug print to data importer ([62ad622](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/62ad6226f80fa7dd18824a7d25c2dd94f659366f))
+
 ## [2.0.2](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.1...v2.0.2) (2026-02-13)
 
 
