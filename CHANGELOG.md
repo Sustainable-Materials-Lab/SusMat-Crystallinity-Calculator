@@ -1,3 +1,10 @@
+## [2.0.5](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.4...v2.0.5) (2026-03-29)
+
+
+### Bug Fixes
+
+* add pypi release via Github ([ebb4673](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/ebb4673b059265419e2c3b5313f2201dffd35d45))
+
 ## [2.0.4](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.3...v2.0.4) (2026-02-24)
 
 
