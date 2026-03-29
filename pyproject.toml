@@ -6,7 +6,7 @@ build-backend = "uv_build"
 name = "SusMat-Crystallinity-Calculator"
 version = "2.0.4"
 authors = [
-  { name="Samuel Eyley", email="samuel.eyley@kuleuven.be" },
+  { name="Samuel Eyley", email="susmat-crystallinity.cyc4x@simplelogin.com" },
 ]
 description = "A collection of python scripts for determining the crystallinity of cellulosic samples"
 readme = "README.md"
@@ -26,8 +26,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator"
-Issues = "https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/-/issues"
+Homepage = "https://github.com/Sustainable-Materials-Lab/SusMat-Crystallinity-Calculator"
+Issues = "https://github.com/Sustainable-Materials-Lab/SusMat-Crystallinity-Calculator/issues"
 
 [project.scripts]
 sm-cryst = "smcryst.cell_cryst:cli"

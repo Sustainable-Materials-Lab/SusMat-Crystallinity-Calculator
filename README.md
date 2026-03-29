@@ -1,11 +1,11 @@
-# WAXS crystallinity calculator
+# SusMat crystallinity calculator
 
 ## Description
 This python script can be used to plot the fitted WAXS data output from TOPAS academic and determine the cellulose (or other polymer) crystallinity using the Ruland method. 
 
 ## Installation
 ```
-pip install SusMat-Crystallinity-Calculator --extra-index-url https://gitlab-ci-token:<your_personal_token>@gitlab.kuleuven.be/api/v4/projects/9685/packages/pypi/simple
+pip install SusMat-Crystallinity-Calculator
 ```
 ## Usage
 This requires a .txt file saved from TOPAS (academic) as input.
@@ -30,18 +30,18 @@ irods-cryst --svg <path_to_collection>
 ```
 
 ## Support
-Contact @u0092172
+Contact Samuel Eyley.
 
 ## Roadmap
 No planned feature upgrades, reported bugs will be fixed.
 
 ## Contributing
-Contributions are welcome, contact @u0092172
+Contributions are welcome, contact Samuel Eyley
 
 ## Authors and acknowledgment
-Authored by @u0092172
+Authored by Samuel Eyley
 
 **AI Assistance**: Code refactoring and architecture improvements contributed by GitHub Copilot (October 2025)
 
 ## License
-Currently not published.
+MIT License
