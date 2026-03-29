@@ -1,0 +1,48 @@
+name: Build, Release, and Publish
+
+on:
+  push:
+    # Trigger this workflow ONLY when a tag matching the pattern (e.g., v1.2.3) is pushed
+    tags:
+      - 'v*' 
+  workflow_dispatch:
+permissions:
+  contents: write # Required to create the GitHub Release and upload files
+  id-token: write # Required for secure OIDC publishing to PyPI
+
+jobs:
+  build-and-publish:
+    name: Build & Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        # Because this is triggered by a tag push, it automatically checks out that exact tag.
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
+
+      - name: Build package (sdist and wheel)
+        run: uv build
+
+      # --- PUBLISH TO PYPI ---
+      - name: Publish package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # Remember to configure PyPI "Trusted Publishers" for this GitHub repo!
+
+      # --- CREATE GITHUB RELEASE ---
+      - name: Create GitHub Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          # This tells GitHub to auto-generate a summary of commits for the release notes 
+          # on the GitHub UI, which is handy since Semantic Release is running over on GitLab.
+          generate_release_notes: true
