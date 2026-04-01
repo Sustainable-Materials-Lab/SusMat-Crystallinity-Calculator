@@ -1,6 +1,7 @@
 plugins:
   # GitLab support
-  - '@semantic-release/gitlab'
+  - - '@semantic-release/gitlab'
+    - useJobToken: true
   # analyses the Git commits
   - '@semantic-release/commit-analyzer'
   # generates the release note from the Git commit messages
