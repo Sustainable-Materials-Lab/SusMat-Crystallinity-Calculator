@@ -1,3 +1,11 @@
+## [2.0.6](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.5...v2.0.6) (2026-10-22)
+
+
+### Bug Fixes
+
+* move github actions to SHA referencing ([1a70c5b](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/1a70c5bdc7178f366ffd1b3fb693d03c52d3c414))
+* remove unnecessary deps ([d030280](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/d0302807ad4a692df619c144966d4a9dad50e1dd))
+
 ## [2.0.5](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.4...v2.0.5) (2026-03-29)
 
 
