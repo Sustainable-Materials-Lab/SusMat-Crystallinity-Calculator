@@ -24,20 +24,3 @@ py-release:
   variables:
     GIT_PASSWORD: "$SUSMAT_RELEASE_TOKEN"
     GITLAB_USER_NAME: "$SUSMAT_RELEASE_USER"
-
-# semantic-release:
-#   before_script:
-#     - !reference [.semrel-base, before_script]
-#     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-#     - |
-#       if [ -f "$SEMREL_DEPLOY_KEY" ]; then
-#         cp "$SEMREL_DEPLOY_KEY" ~/.ssh/semrel_deploy_key
-#       else
-#         printf '%s\n' "$SEMREL_DEPLOY_KEY" | tr -d '\r' > ~/.ssh/semrel_deploy_key
-#       fi
-#     - chmod 600 ~/.ssh/semrel_deploy_key
-#     - eval "$(ssh-agent -s)"
-#     - ssh-add ~/.ssh/semrel_deploy_key
-#     - ssh-keyscan -H "$CI_SERVER_HOST" >> ~/.ssh/known_hosts
-#     - chmod 644 ~/.ssh/known_hosts
-#     - git remote set-url origin "git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git"
