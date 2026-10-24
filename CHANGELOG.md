@@ -1,3 +1,10 @@
+## [2.0.8](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.7...v2.0.8) (2026-10-24)
+
+
+### Bug Fixes
+
+* remove obsolete dependabot ([b135495](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/commit/b13549596c4949bc992708def3c33f810099455f))
+
 ## [2.0.7](https://gitlab.kuleuven.be/susmat/cellulose/waxs-crystallinity-calculator/compare/v2.0.6...v2.0.7) (2026-10-23)
 
 
